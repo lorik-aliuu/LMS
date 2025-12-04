@@ -20,6 +20,14 @@ namespace LMS.Domain.Entities
 
         public ReadingStatus ReadingStatus { get; set; } = ReadingStatus.NotStarted;
 
+        public string UserId { get; set; } = string.Empty;
+
+        public string? CoverImageUrl { get; set; }
+
+        public int? Rating { get; set; }
+
+        public int? PublicationYear { get; set; }
+
 
     }
 }
