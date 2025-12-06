@@ -7,10 +7,9 @@ using System.Threading.Tasks;
 
 namespace LMS.Application.DTOs.Books
 {
-    public class BookListDTO
+    
+        public class BookListDTO
     {
-        public class BookListDto
-        {
             public int Id { get; set; }                
             public string Title { get; set; } = string.Empty;
             public string Author { get; set; } = string.Empty;
@@ -20,5 +19,5 @@ namespace LMS.Application.DTOs.Books
             public int? Rating { get; set; }             
             public string? CoverImageUrl { get; set; }   
         }
-    }
+    
 }
