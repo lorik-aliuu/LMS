@@ -14,10 +14,6 @@ namespace LMS.Application.Validators
         public UpdateBookDtoValidator() {
 
 
-
-            RuleFor(x => x.Id)
-                .GreaterThan(0).WithMessage("Invalid book ID");
-
             RuleFor(x => x.Title)
             .NotEmpty().WithMessage("Title is required")
             .MaximumLength(200).WithMessage("Title cannot exceed 200 characters");

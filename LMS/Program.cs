@@ -1,7 +1,11 @@
+using AutoMapper;
 using FluentValidation;
+using FluentValidation.AspNetCore;
 using LMS.API.Middleware;
+using LMS.Application.AutoMapper;
 using LMS.Application.RepositoryInterfaces;
 using LMS.Application.ServiceInterfaces;
+using LMS.Application.Services;
 using LMS.Application.Validators;
 using LMS.Infrastructure;
 using LMS.Infrastructure.Identity;
@@ -11,10 +15,12 @@ using LMS.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Diagnostics;
 using System.Text;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -117,15 +123,29 @@ builder.Services.AddSwaggerGen(options =>
 
 
 builder.Services.AddControllers();
+builder.Services.AddFluentValidationAutoValidation();
+
+
+
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
+builder.Services.AddScoped<IBookRepository, BookRepository>();
+
+
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 
+builder.Services.AddScoped<IBookService, BookService>();
+
+builder.Services.AddAutoMapper(cfg => cfg.AddProfile<MappingProfile>());
 
 builder.Services.AddValidatorsFromAssemblyContaining<RegisterDtoValidator>();
+
+
+
+
 
 
 
@@ -229,4 +249,6 @@ static async Task SeedDefaultRolesAndAdmin(
     }
 }
 
-app.Run();
+
+    app.Run();
+

@@ -27,6 +27,11 @@
                .ForMember(b => b.UserId, opt => opt.Ignore()) 
                .ForMember(b => b.UpdatedAt, opt => opt.MapFrom(src => DateTime.UtcNow)) 
                .ForMember(b => b.IsDeleted, opt => opt.Ignore());
-            }
+
+
+            CreateMap<Book, BookListDTO>();
+
+        }
+
         }
     }
