@@ -16,6 +16,7 @@ namespace LMS.Application.ServiceInterfaces
         Task DeleteBookAsync(int bookId, string userId);
         Task<IEnumerable<BookListDTO>> SearchUserBooksAsync(string userId, string searchTerm);
 
+        //ADMIN
         Task<IEnumerable<BookListDTO>> GetAllBooksForAdminAsync();
         Task<BookDTO> GetAnyBookByIdAsync(int bookId);
         Task DeleteAnyBookAsync(int bookId); 
