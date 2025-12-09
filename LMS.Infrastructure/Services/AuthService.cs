@@ -212,6 +212,7 @@ namespace LMS.Infrastructure.Services
             return new AuthResponseDTO
             {
                 Token = newAccessToken,
+                 RefreshToken = newRefreshToken.Token,
                 UserId = user.Id,
                 UserName = user.UserName!,
                 Email = user.Email!,

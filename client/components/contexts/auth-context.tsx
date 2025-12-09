@@ -33,7 +33,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const logout = useCallback(() => {
     clearTokens()
-    sessionStorage.removeItem("authUser")
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("authUser")
+    }
     setToken(null)
     setUser(null)
     router.push("/login")
@@ -45,27 +47,38 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [logout])
 
   useEffect(() => {
-    const storedUser = sessionStorage.getItem("authUser")
+    const storedUser = typeof window !== "undefined" ? localStorage.getItem("authUser") : null
 
     if (storedUser) {
       try {
         const parsedUser = JSON.parse(storedUser) as User
         setUser(parsedUser)
-
-       
-        const currentToken = getAccessToken()
-        if (currentToken && hasValidTokens()) {
-          setToken(currentToken)
-        } else {
-         
-          sessionStorage.removeItem("authUser")
-          setUser(null)
-        }
       } catch {
-        sessionStorage.removeItem("authUser")
+        localStorage.removeItem("authUser")
       }
     }
-    setIsLoading(false)
+
+    const initAuth = async () => {
+      const currentToken = getAccessToken()
+
+      if (currentToken && hasValidTokens()) {
+        setToken(currentToken)
+        setIsLoading(false)
+        return
+      }
+
+      const refreshed = await tryRefreshToken()
+      if (refreshed) {
+        const newToken = getAccessToken()
+        setToken(newToken)
+      } else {
+        localStorage.removeItem("authUser")
+        setUser(null)
+      }
+      setIsLoading(false)
+    }
+
+    void initAuth()
   }, [])
 
   const login = (authData: AuthResponse["data"]) => {
@@ -80,7 +93,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
 
     setTokens(authData.token, authData.refreshToken, authData.expiresAt)
-    sessionStorage.setItem("authUser", JSON.stringify(userData))
+    localStorage.setItem("authUser", JSON.stringify(userData))
 
     setToken(authData.token)
     setUser(userData)

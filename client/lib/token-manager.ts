@@ -3,6 +3,7 @@
 import type { RefreshTokenResponse } from "./types"
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "https://localhost:7112/api"
+const TOKEN_STORAGE_KEY = "authTokens"
 
 interface TokenData {
   accessToken: string
@@ -10,10 +11,47 @@ interface TokenData {
   expiresAt: Date
 }
 
-
 let tokenData: TokenData | null = null
 let refreshTimeoutId: ReturnType<typeof setTimeout> | null = null
 let onTokenRefreshFailed: (() => void) | null = null
+
+function isBrowser() {
+  return typeof window !== "undefined"
+}
+
+function readStoredTokens(): TokenData | null {
+  if (!isBrowser()) return null
+  const raw = window.localStorage.getItem(TOKEN_STORAGE_KEY)
+  if (!raw) return null
+  try {
+    const parsed = JSON.parse(raw) as { accessToken: string; refreshToken: string; expiresAt: string }
+    const expiresAt = new Date(parsed.expiresAt)
+    if (Number.isNaN(expiresAt.getTime())) {
+      window.localStorage.removeItem(TOKEN_STORAGE_KEY)
+      return null
+    }
+    return {
+      accessToken: parsed.accessToken,
+      refreshToken: parsed.refreshToken,
+      expiresAt,
+    }
+  } catch {
+    window.localStorage.removeItem(TOKEN_STORAGE_KEY)
+    return null
+  }
+}
+
+function writeStoredTokens(data: TokenData) {
+  if (!isBrowser()) return
+  window.localStorage.setItem(
+    TOKEN_STORAGE_KEY,
+    JSON.stringify({
+      accessToken: data.accessToken,
+      refreshToken: data.refreshToken,
+      expiresAt: data.expiresAt.toISOString(),
+    }),
+  )
+}
 
 export function setTokenRefreshFailedCallback(callback: () => void) {
   onTokenRefreshFailed = callback
@@ -26,11 +64,19 @@ export function setTokens(accessToken: string, refreshToken: string, expiresAt: 
     expiresAt: new Date(expiresAt),
   }
 
-
+  writeStoredTokens(tokenData)
   scheduleTokenRefresh()
 }
 
 export function getAccessToken(): string | null {
+  if (!tokenData) {
+    const stored = readStoredTokens()
+    if (stored) {
+      tokenData = stored
+      scheduleTokenRefresh()
+    }
+  }
+
   return tokenData?.accessToken || null
 }
 
@@ -44,12 +90,26 @@ export function clearTokens() {
     clearTimeout(refreshTimeoutId)
     refreshTimeoutId = null
   }
+  if (isBrowser()) {
+    window.localStorage.removeItem(TOKEN_STORAGE_KEY)
+  }
 }
 
 export function hasValidTokens(): boolean {
+  if (!tokenData) {
+    const stored = readStoredTokens()
+    if (stored) {
+      tokenData = stored
+      scheduleTokenRefresh()
+    }
+  }
+
   if (!tokenData) return false
-  
-  return new Date(tokenData.expiresAt.getTime() - 30000) > new Date()
+
+  const expiry = tokenData.expiresAt?.getTime()
+  if (!expiry || Number.isNaN(expiry)) return false
+
+  return new Date(expiry - 30000) > new Date()
 }
 
 function scheduleTokenRefresh() {
@@ -110,5 +170,13 @@ async function refreshAccessToken(): Promise<boolean> {
 
 
 export async function tryRefreshToken(): Promise<boolean> {
+  if (!tokenData) {
+    const stored = readStoredTokens()
+    if (stored) {
+      tokenData = stored
+      scheduleTokenRefresh()
+    }
+  }
+
   return refreshAccessToken()
 }
