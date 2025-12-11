@@ -10,14 +10,15 @@ import { OverviewTab } from "@/components/admin/overview-tab"
 import { UsersTab } from "@/components/admin/users-tab"
 import { BooksTab } from "@/components/admin/books-tab"
 import { getAllUsers, getAllBooksAdmin, getTotalBooksCount } from "@/lib/api"
-// Removed getAccessToken because the manual token check is removed
+import { ChatAssistant } from "@/components/chat/chat-assistant"
+
 import type { AdminUser, AdminBook } from "@/lib/types"
 import { Loader2 } from "lucide-react"
 
 type Tab = "overview" | "users" | "books"
 
 export default function AdminDashboard() {
-  const { user, isAuthenticated, isLoading: authLoading, logout } = useAuth() // Added 'logout'
+  const { user, isAuthenticated, isLoading: authLoading, logout } = useAuth() 
   const router = useRouter()
   const [activeTab, setActiveTab] = useState<Tab>("overview")
   const [users, setUsers] = useState<AdminUser[]>([])
@@ -53,7 +54,7 @@ export default function AdminDashboard() {
       setBooks(booksData)
       setTotalBooksCount(countData)
     } catch (error) {
-      console.error("Failed to fetch admin data:", error)
+      console.error("Failed to fetch  data:", error)
       
     } finally {
       setLoading(false)
@@ -96,6 +97,7 @@ export default function AdminDashboard() {
           )}
         </main>
       </div>
+          <ChatAssistant />
     </div>
   )
 }

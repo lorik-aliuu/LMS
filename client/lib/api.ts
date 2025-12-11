@@ -1,7 +1,7 @@
 import type { Book, CreateBookDTO, UpdateBookDTO, UserProfile, UpdateProfileDTO, ChangePasswordDTO, DeleteAccountDTO, AdminUser, AdminBook, UpdateRoleDTO } from "./types"
 import { getAccessToken, tryRefreshToken } from "./token-manager"
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:5298/api"
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL
 
 function getAuthHeaders(): HeadersInit {
   const token = getAccessToken()
@@ -251,7 +251,7 @@ export async function updateUserRole(userId: string, role: UpdateRoleDTO): Promi
   if (!response.ok) {
     const error = await response.json().catch(() => ({}))
     const errorMessage = error.message || `Failed to update user role (${response.status})`
-    console.error("❌ Role update failed:", errorMessage)
+    console.error(" Role update failed:", errorMessage)
     throw new Error(errorMessage)
   }
 }
@@ -308,4 +308,50 @@ export async function getTotalBooksCount(): Promise<number> {
 
   const data = await response.json()
   return data.totalBooks || 0
+}
+
+
+export async function sendAiQuery(query: string): Promise<{
+  success: boolean
+  answer: string
+  interpretedQuery?: string
+  data?: Record<string, unknown>[]
+  chartType?: string
+  errorMessage?: string
+}> {
+  const response = await authenticatedFetch(`${API_BASE_URL}/AiQuery/query`, {
+    method: "POST",
+    body: JSON.stringify({ Query: query }),
+  })
+
+  const result = await response.json()
+
+  if (!response.ok || !result.success) {
+    return {
+      success: false,
+      answer: result.errorMessage || result.message || "Failed to process query",
+      errorMessage: result.errorMessage || result.message,
+    }
+  }
+
+  return {
+    success: true,
+    answer: result.answer,
+    interpretedQuery: result.interpretedQuery,
+    data: result.data,
+    chartType: result.chartType,
+  }
+}
+
+export async function getAiExamples(): Promise<string[]> {
+  const response = await authenticatedFetch(`${API_BASE_URL}/AiQuery/examples`, {
+    method: "GET",
+  })
+
+  if (!response.ok) {
+    return []
+  }
+
+  const result = await response.json()
+  return result.data || []
 }

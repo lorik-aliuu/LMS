@@ -13,7 +13,7 @@ export function useUserNotification() {
   const connectionRef = useRef<signalR.HubConnection | null>(null)
   const isConnectingRef = useRef(false)
   const userRef = useRef(user)
-  const hubUrl = process.env.NEXT_PUBLIC_SIGNALR_URL ?? "http://localhost:5298/hubs/user-event"
+  const hubUrl = process.env.NEXT_PUBLIC_SIGNALR_URL!
 
   useEffect(() => {
     userRef.current = user

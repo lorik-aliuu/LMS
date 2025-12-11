@@ -1,6 +1,6 @@
 import type { RefreshTokenResponse } from "./types"
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:5298/api"
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL 
 
 const STORAGE_KEYS = {
     accessToken: "auth_access_token",

@@ -15,6 +15,7 @@ import { getBooks, createBook, updateBook, deleteBook } from "@/lib/api"
 import type { Book, CreateBookDTO, UpdateBookDTO } from "@/lib/types"
 import { ReadingStatus } from "@/lib/types"
 import { Plus, Search, Loader2, BookOpen } from "lucide-react"
+import { ChatAssistant } from "@/components/chat/chat-assistant"
 
 export default function DashboardPage() {
   const { user, isLoading: authLoading, isAuthenticated } = useAuth()
@@ -238,6 +239,8 @@ export default function DashboardPage() {
       />
 
       <SettingsDialog open={isSettingsOpen} onOpenChange={setIsSettingsOpen} />
+  
+    <ChatAssistant />
     </div>
   )
 }

@@ -140,3 +140,32 @@ export interface AdminBook extends Book {
   ownerName?: string
 }
 
+export interface AiQueryRequest {
+  query: string
+}
+
+export interface AiQueryResponse {
+  success: boolean
+  answer: string
+  interpretedQuery?: string
+  data?: Record<string, unknown>[]
+  chartType?: "bar" | "table" | string
+  errorMessage?: string
+  timestamp: string
+}
+
+export interface AiExamplesResponse {
+  success: boolean
+  data: string[]
+}
+
+export interface ChatMessage {
+  id: string
+  role: "user" | "assistant"
+  content: string
+  data?: Record<string, unknown>[]
+  chartType?: string
+  timestamp: Date
+}
+
+
