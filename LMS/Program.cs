@@ -27,7 +27,9 @@ using Microsoft.EntityFrameworkCore;
     var builder = WebApplication.CreateBuilder(args);
 
 
-    builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+
+
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
     {
         options.Password.RequireDigit = true;
         options.Password.RequireLowercase = true;
@@ -164,8 +166,10 @@ using Microsoft.EntityFrameworkCore;
 
     builder.Services.AddScoped<IBookRepository, BookRepository>();
 
+builder.Services.AddScoped<IOpenAiService, OpenAiService>();
+builder.Services.AddScoped<IAiQueryService, AiQueryService>();
 
-    builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
+builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
     builder.Services.AddScoped<IAuthService, AuthService>();
     builder.Services.AddScoped<IUserService, UserService>();
 
