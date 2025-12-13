@@ -61,14 +61,20 @@ builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowFrontend",
-        policy =>
-        {
-            policy.WithOrigins("http://localhost:3000")
-                  .AllowAnyHeader()
-                  .AllowAnyMethod()
-                  .AllowCredentials();
-        });
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy.WithOrigins(
+                "http://localhost",          
+                "http://localhost:80",        
+                "http://localhost:3000",
+                "http://localhost:8080"
+
+            )
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+            .AllowCredentials()
+            .SetIsOriginAllowed(_ => true); 
+    });
 });
 
 
@@ -184,8 +190,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
         builder.Services.AddScoped<IAuthService, AuthService>();
         builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ICacheService, RedisService>();
+builder.Services.AddScoped<IRecommendationService, RecommendationService>();
 
-        builder.Services.AddScoped<IUserNotifierService, UserNotifierService>();
+builder.Services.AddScoped<IUserNotifierService, UserNotifierService>();
 
 
 
@@ -203,9 +210,17 @@ builder.Services.AddScoped<ICacheService, RedisService>();
 
         var app = builder.Build();
 
+app.UseForwardedHeaders(new ForwardedHeadersOptions
+{
+    ForwardedHeaders = Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedFor
+                     | Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedProto
+});
+
+app.MapGet("/health", () => Results.Ok(new { status = "healthy", timestamp = DateTime.UtcNow }));
 
 
-        app.UseMiddleware<ExceptionHandlingMiddleware>();
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 
         if (app.Environment.IsDevelopment())
