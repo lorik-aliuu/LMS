@@ -168,4 +168,35 @@ export interface ChatMessage {
   timestamp: Date
 }
 
+export interface BookRecommendation {
+  title: string
+  author: string
+  genre: string
+  estimatedPrice: number
+  reason: string
+}
+
+export interface RecommendationRequest {
+  count: number
+}
+
+export interface RecommendationResponse {
+  success: boolean
+  message: string
+  recommendations: BookRecommendation[]
+  recommendationType?: string
+  timestamp: string
+}
+
+  export interface SaveRecommendationDTO {
+    title: string
+    author: string
+    genre: string
+    price: number
+  }
+
+  export interface DismissRecommendationDTO {
+    title: string
+    author: string
+  }
 

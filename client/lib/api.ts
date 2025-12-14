@@ -1,4 +1,4 @@
-import type { Book, CreateBookDTO, UpdateBookDTO, UserProfile, UpdateProfileDTO, ChangePasswordDTO, DeleteAccountDTO, AdminUser, AdminBook, UpdateRoleDTO } from "./types"
+import type { Book, CreateBookDTO, UpdateBookDTO, UserProfile, UpdateProfileDTO, ChangePasswordDTO, DeleteAccountDTO, AdminUser, AdminBook, UpdateRoleDTO, RecommendationResponse, DismissRecommendationDTO, SaveRecommendationDTO } from "./types"
 import { getAccessToken, tryRefreshToken } from "./token-manager"
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL
@@ -354,4 +354,51 @@ export async function getAiExamples(): Promise<string[]> {
 
   const result = await response.json()
   return result.data || []
+}
+
+export async function getRecommendations(count = 5): Promise<RecommendationResponse> {
+  const response = await authenticatedFetch(`${API_BASE_URL}/Recommendation`, {
+    method: "POST",
+    body: JSON.stringify({ Count: count }),
+  })
+
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({}))
+    throw new Error(error.message || "Failed to get recommendations")
+  }
+
+  const data = await response.json()
+  return data
+}
+
+export async function saveRecommendedBook(data: SaveRecommendationDTO): Promise<void> {
+  const response = await authenticatedFetch(`${API_BASE_URL}/Recommendation/save`, {
+    method: "POST",
+    body: JSON.stringify({
+      Title: data.title,
+      Author: data.author,
+      Genre: data.genre,
+      Price: data.price,
+    }),
+  })
+
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({}))
+    throw new Error(error.message || "Failed to save book")
+  }
+}
+
+export async function dismissRecommendedBook(data: DismissRecommendationDTO): Promise<void> {
+  const response = await authenticatedFetch(`${API_BASE_URL}/Recommendation/dismiss`, {
+    method: "POST",
+    body: JSON.stringify({
+      Title: data.title,
+      Author: data.author,
+    }),
+  })
+
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({}))
+    throw new Error(error.message || "Failed to dismiss recommendation")
+  }
 }

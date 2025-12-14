@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useCallback } from "react"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/components/contexts/auth-context"
 import { DashboardHeader } from "@/components/dashboard/dashboard-header"
@@ -16,6 +16,7 @@ import type { Book, CreateBookDTO, UpdateBookDTO } from "@/lib/types"
 import { ReadingStatus } from "@/lib/types"
 import { Plus, Search, Loader2, BookOpen } from "lucide-react"
 import { ChatAssistant } from "@/components/chat/chat-assistant"
+import { RecommendationsCard } from "@/components/dashboard/recommendations-card"
 
 export default function DashboardPage() {
   const { user, isLoading: authLoading, isAuthenticated } = useAuth()
@@ -49,23 +50,23 @@ export default function DashboardPage() {
   }, [authLoading, isAuthenticated, user, router])
 
 
-  useEffect(() => {
-    async function fetchBooks() {
-      try {
-        const data = await getBooks()
-        setBooks(data)
-        setFilteredBooks(data)
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "Failed to fetch books")
-      } finally {
-        setIsLoading(false)
-      }
+  const fetchBooks = useCallback(async () => {
+    try {
+      const data = await getBooks()
+      setBooks(data)
+      setFilteredBooks(data)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to fetch books")
+    } finally {
+      setIsLoading(false)
     }
+  }, [])
 
+  useEffect(() => {
     if (isAuthenticated) {
       fetchBooks()
     }
-  }, [isAuthenticated])
+  }, [isAuthenticated, fetchBooks])
 
   
   useEffect(() => {
@@ -160,7 +161,7 @@ export default function DashboardPage() {
             </p>
           </div>
         </div>
- 
+   <RecommendationsCard onBookAdded={fetchBooks} />
     
         <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex flex-1 gap-3">
