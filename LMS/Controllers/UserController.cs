@@ -28,6 +28,7 @@ namespace LMS.API.Controllers
 
 
         [HttpGet("profile")]
+       
         public async Task<IActionResult> GetMyProfile()
         {
             var userId = GetCurrentUserId();
@@ -41,6 +42,7 @@ namespace LMS.API.Controllers
         }
 
         [HttpPut("profile")]
+        [Authorize(Roles = "User")]
         public async Task<IActionResult> UpdateMyProfile([FromBody] UpdateUserDTO updateDto)
         {
             var userId = GetCurrentUserId();
@@ -55,6 +57,7 @@ namespace LMS.API.Controllers
         }
 
         [HttpPost("change-password")]
+        [Authorize(Roles = "User")]
         public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDTO changePasswordDto)
         {
             var userId = GetCurrentUserId();
@@ -68,6 +71,7 @@ namespace LMS.API.Controllers
         }
 
         [HttpDelete("account")]
+        [Authorize(Roles = "User")]
         public async Task<IActionResult> DeleteMyAccount([FromBody] DeleteAccountDTO deleteDto)
         {
             var userId = GetCurrentUserId();

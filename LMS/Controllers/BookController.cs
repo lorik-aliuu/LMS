@@ -34,6 +34,8 @@ namespace LMS.API.Controllers
 
 
         [HttpGet("my-books")]
+        [Authorize(Roles = "User")]
+
         public async Task<IActionResult> GetMyBooks()
         {
             var userId = GetUserId();
@@ -61,6 +63,7 @@ namespace LMS.API.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "User")]
         public async Task<IActionResult> CreateBook([FromBody] CreateBookDTO createBookDto)
         {
             var userId = GetUserId();
@@ -78,6 +81,7 @@ namespace LMS.API.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "User")]
         public async Task<IActionResult> UpdateBook(int id, [FromBody] UpdateBookDTO updateBookDto)
         {
            
@@ -94,6 +98,7 @@ namespace LMS.API.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "User")]
         public async Task<IActionResult> DeleteBook(int id)
         {
             var userId = GetUserId();
@@ -129,6 +134,7 @@ namespace LMS.API.Controllers
         }
 
         [HttpGet("my-books/count")]
+        [Authorize(Roles = "User")]
         public async Task<IActionResult> GetMyBooksCount()
         {
             var userId = GetUserId();

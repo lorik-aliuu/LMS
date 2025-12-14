@@ -9,7 +9,7 @@ namespace LMS.API.Controllers
 
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    [Authorize(Roles ="User")]
     public class RecommendationController : ControllerBase
     {
         private readonly IRecommendationService _recommendationService;
@@ -26,6 +26,7 @@ namespace LMS.API.Controllers
         }
 
         [HttpPost]
+        
         public async Task<IActionResult> GetRecommendations([FromBody] RecommendationRequestDTO request)
         {
             var userId = GetCurrentUserId();
