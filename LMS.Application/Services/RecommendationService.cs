@@ -48,17 +48,23 @@ public class RecommendationService : IRecommendationService
                 };
             }
 
-         
-            var dismissedJson = await _redisCache.GetAsync<string>($"{DismissedPrefix}{userId}");
-            var dismissed = string.IsNullOrEmpty(dismissedJson)
-                ? new HashSet<string>()
-                : JsonSerializer.Deserialize<HashSet<string>>(dismissedJson) ?? new HashSet<string>();
+            HashSet<string> dismissed = new();
+            try
+            {
+                var dismissedJson = await _redisCache.GetAsync<string>($"{DismissedPrefix}{userId}");
+                if (!string.IsNullOrWhiteSpace(dismissedJson))
+                    dismissed = JsonSerializer.Deserialize<HashSet<string>>(dismissedJson) ?? new HashSet<string>();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "Redis unavailable");
+            }
 
             return await GetAIRecommendationsAsync(userBooks, dismissed, request.Count);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Failed to generate recommendations for user {UserId}", userId);
+            _logger.LogError(ex, "Failed to generate");
 
             return new BookRecommendationResponseDTO
             {
@@ -68,6 +74,7 @@ public class RecommendationService : IRecommendationService
             };
         }
     }
+
 
     private async Task<BookRecommendationResponseDTO> GetAIRecommendationsAsync(
         List<Book> userBooks,
@@ -113,7 +120,8 @@ Return ONLY valid JSON in this format:
         );
 
         var recommendations = ParseAIResponse(aiResponse)
-            .Where(r => !dismissed.Contains(r.Title)) 
+            .Where(r => !dismissed.Contains(r.Title) &&
+            !userBooks.Any(b => b.Title == r.Title && b.Author == r.Author))
             .Take(count)
             .ToList();
 
@@ -139,7 +147,10 @@ Return ONLY valid JSON in this format:
             var parsed = JsonSerializer.Deserialize<AIResponse>(cleaned,
                 new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
-            return parsed?.Recommendations ?? new List<BookRecommendationDTO>();
+            var recommendations = parsed?.Recommendations ?? new List<BookRecommendationDTO>();
+
+
+            return recommendations;
         }
         catch (Exception ex)
         {
@@ -189,25 +200,45 @@ Return ONLY valid JSON in this format:
         };
     }
 
-    public async Task<ActionRecommendationResponseDTO> DismissRecommendedBookAsync(string userId, DismissRecommendationDTO request)
+    public async Task<ActionRecommendationResponseDTO> DismissRecommendedBookAsync(
+    string userId,
+    DismissRecommendationDTO request)
     {
         var key = $"{DismissedPrefix}{userId}";
-
-        
-        var dismissedJson = await _redisCache.GetAsync<string>(key);
-        var dismissed = string.IsNullOrEmpty(dismissedJson)
-            ? new HashSet<string>()
-            : JsonSerializer.Deserialize<HashSet<string>>(dismissedJson) ?? new HashSet<string>();
-
-        dismissed.Add(request.Title);
+        HashSet<string> dismissed = new();
 
        
-        await _redisCache.SetAsync(key, JsonSerializer.Serialize(dismissed), DismissTime);
+        try
+        {
+            var dismissedJson = await _redisCache.GetAsync<string>(key);
+            if (!string.IsNullOrWhiteSpace(dismissedJson))
+                dismissed = JsonSerializer.Deserialize<HashSet<string>>(dismissedJson) ?? new HashSet<string>();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Redis unavailable, continuing without cache.");
+        }
+
+        var dismissKey = $"{request.Title}|{request.Author}";
+        dismissed.Add(dismissKey);
+
+       
+        _ = Task.Run(async () =>
+        {
+            try
+            {
+                await _redisCache.SetAsync(key, JsonSerializer.Serialize(dismissed), DismissTime);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "Failed to write dismissed books to Redis.");
+            }
+        });
 
         return new ActionRecommendationResponseDTO
         {
             Success = true,
-            Message = "Book dismissed "
+            Message = "Book dismissed"
         };
     }
 }
