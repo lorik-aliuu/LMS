@@ -177,6 +177,11 @@ namespace LMS.Application.Services
 
             await _cacheService.RemoveByPatternAsync("aiquery:admin:*");
 
+            await _cacheService.RemoveAsync($"insights:user:{userId}");
+            await _cacheService.RemoveAsync("insights:library");
+
+
+
         }
     }
 }

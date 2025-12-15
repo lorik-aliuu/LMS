@@ -25,6 +25,10 @@
 
         private static readonly TimeSpan CACHE_TTL_FAST = TimeSpan.FromSeconds(30);
         private static readonly TimeSpan CACHE_TTL_NORMAL = TimeSpan.FromMinutes(3);
+        private static readonly TimeSpan CACHE_OPERATION_TIMEOUT = TimeSpan.FromMilliseconds(500);
+
+    
+
 
 
         public AiQueryService(
@@ -41,11 +45,10 @@
             _userService = userService;
             }
 
-            public async Task<AiQueryResponseDTO> ProcessQueryAsync(string query, string userId, bool isAdmin)
+        public async Task<AiQueryResponseDTO> ProcessQueryAsync(string query, string userId, bool isAdmin)
+        {
+            try
             {
-                try
-                {
-
                 if (!await CanExecuteQueryAsync(userId))
                 {
                     return new AiQueryResponseDTO
@@ -56,74 +59,147 @@
                     };
                 }
 
-                var cacheKey = $"aiquery:{userId}:{query}";
-                var cachedResult = await _cacheService.GetAsync<AiQueryResponseDTO>(cacheKey);
-                if (cachedResult != null)
+                var queryHash = Convert.ToBase64String(
+                    System.Security.Cryptography.SHA256.HashData(
+                        System.Text.Encoding.UTF8.GetBytes(query)));
+
+                var cacheKey = $"aiquery:{userId}:{queryHash}";
+
+                var cached = await TryGetFromCacheAsync<AiQueryResponseDTO>(cacheKey);
+                if (cached != null)
                 {
-                    return cachedResult;
+                    _logger.LogInformation("Cache hit for query");
+                    return cached;
                 }
 
-
-
                 var context = isAdmin
-                        ? "User is an admin and can query all books across all users."
-                        : $"User can only query their own books (UserId: {userId}).";
+                    ? "User is an admin and can query all books."
+                    : $"User can only query their own books (UserId: {userId}).";
 
-                    var aiResponse = await _openAIService.AnalyzeQueryAsync(query, context);
-                    var queryIntent = ParseAIResponse(aiResponse);
-                    var result = await ExecuteQueryAsync(queryIntent, userId, isAdmin);
+                var aiResponse = await _openAIService.AnalyzeQueryAsync(query, context);
+                var intent = ParseAIResponse(aiResponse);
 
-                    var dataJson = JsonSerializer.Serialize(result.Data);
-                    var answer = await _openAIService.GenerateAnswerAsync(query, dataJson);
+                var result = await ExecuteQueryAsync(intent, userId, isAdmin);
 
-               
-                    if (queryIntent.QueryType == "USER_STATISTICS")
-                    {
-                        if (result.Data.Count == 0 || result.Data.All(d => d.ContainsKey("value") && (int)d["value"] == 0))
-                        {
-                            answer = "You aren't reading any books.";
-                        }
-                    }
+                var dataJson = JsonSerializer.Serialize(result.Data);
+                var answer = await _openAIService.GenerateAnswerAsync(query, dataJson);
 
-                    var response =  new AiQueryResponseDTO
-                    {
-                        Success = true,
-                        Answer = answer,
-                        InterpretedQuery = queryIntent.QueryType,
-                        Data = result.Data,
-                        ChartType = result.ChartType
-                    };
+                var response = new AiQueryResponseDTO
+                {
+                    Success = true,
+                    Answer = answer,
+                    InterpretedQuery = intent.QueryType,
+                    Data = result.Data,
+                    ChartType = result.ChartType
+                };
 
-                var ttl = queryIntent.QueryType switch
+
+                var ttl = intent.QueryType switch
                 {
                     "USER_STATISTICS" => CACHE_TTL_FAST,
                     "CURRENTLY_READING" => CACHE_TTL_FAST,
                     _ => CACHE_TTL_NORMAL
                 };
-                await _cacheService.SetAsync(cacheKey, response, ttl);
+
+                _ = Task.Run(async () =>
+                {
+                    try
+                    {
+                        await TrySetCacheAsync(cacheKey, response, ttl);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogWarning(ex, "cache write failed");
+                    }
+                });
 
                 return response;
-
-
             }
-                catch (Exception ex)
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "AI query failed");
+                return new AiQueryResponseDTO
                 {
-                    _logger.LogError(ex, "Error processing AI query: {Query}", query);
+                    Success = false,
+                    Answer = "An error occurred while processing your request.",
+                    ErrorMessage = "AI processing error"
+                };
+            }
+        }
 
-                    return new AiQueryResponseDTO
-                    {
-                        Success = false,
-                        ErrorMessage = "I'm sorry, I couldnt process your query. Please try rephrasing it.",
-                        Answer = "An error occurred while processing your request."
-                    };
+        private async Task<T?> TryGetFromCacheAsync<T>(string key) where T : class
+        {
+            try
+            {
+                using var cts = new CancellationTokenSource(CACHE_OPERATION_TIMEOUT);
+                var cacheTask = _cacheService.GetAsync<T>(key);
+                var completedTask = await Task.WhenAny(cacheTask, Task.Delay(CACHE_OPERATION_TIMEOUT, cts.Token));
+
+                if (completedTask == cacheTask)
+                {
+                    cts.Cancel(); 
+                    return await cacheTask;
+                }
+
+                _logger.LogWarning("Cache read timed out", CACHE_OPERATION_TIMEOUT.TotalMilliseconds);
+                return null;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "Cache read failed");
+                return null;
+            }
+        }
+
+        private async Task TrySetCacheAsync<T>(string key, T value, TimeSpan ttl) where T : class
+        {
+            try
+            {
+                using var cts = new CancellationTokenSource(CACHE_OPERATION_TIMEOUT);
+                var cacheTask = _cacheService.SetAsync(key, value, ttl);
+                var completedTask = await Task.WhenAny(cacheTask, Task.Delay(CACHE_OPERATION_TIMEOUT, cts.Token));
+
+                if (completedTask != cacheTask)
+                {
+                    _logger.LogWarning("Cache write timed out", CACHE_OPERATION_TIMEOUT.TotalMilliseconds);
+                }
+                else
+                {
+                    cts.Cancel();
+                    await cacheTask;
                 }
             }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "Cache write failed");
+            }
+        }
+
 
         private async Task<bool> CanExecuteQueryAsync(string userId)
         {
-            var key = $"rate:{userId}";
-            var count = await _cacheService.IncrementAsync(key, RATE_LIMIT_WINDOW);
-            return count <= RATE_LIMIT_MAX_CALLS;
+            try
+            {
+                using var cts = new CancellationTokenSource(CACHE_OPERATION_TIMEOUT);
+                var key = $"rate:{userId}";
+                var incrementTask = _cacheService.IncrementAsync(key, RATE_LIMIT_WINDOW);
+                var completedTask = await Task.WhenAny(incrementTask, Task.Delay(CACHE_OPERATION_TIMEOUT, cts.Token));
+
+                if (completedTask == incrementTask)
+                {
+                    cts.Cancel();
+                    var count = await incrementTask;
+                    return count <= RATE_LIMIT_MAX_CALLS;
+                }
+
+                _logger.LogWarning("Rate limit check timed out, allowing request");
+                return true; 
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "Rate limit check failed, allowing request");
+                return true; 
+            }
         }
 
         private QueryIntent ParseAIResponse(string aiResponse)
@@ -402,7 +478,7 @@
             var books = isAdmin
                 ? (await _bookRepository.GetAllBooksForAdminAsync())
                     .Where(b => b.ReadingStatus == ReadingStatus.Completed)
-                : await _bookRepository.GetBooksByStatusAsync(userId, ReadingStatus.Completed);
+                : await _bookRepository.GetBooksByStatusAsync(userId, ReadingStatus.Reading);
 
             var bookList = books.Select(b => new Dictionary<string, object>
             {
