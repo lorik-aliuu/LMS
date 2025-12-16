@@ -192,6 +192,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddScoped<ICacheService, RedisService>();
 builder.Services.AddScoped<IRecommendationService, RecommendationService>();
 
+builder.Services.AddScoped<ILibraryInsightsService, LibraryInsightsService>();
+
 builder.Services.AddScoped<IUserNotifierService, UserNotifierService>();
 
 

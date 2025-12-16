@@ -18,6 +18,8 @@ namespace LMS.Application.Services
         private readonly IMapper _mapper;
         private readonly ICacheService _cacheService;
 
+        private static readonly TimeSpan CACHE_OPERATION_TIMEOUT = TimeSpan.FromMilliseconds(500);
+
         public BookService(IBookRepository bookRepository, IMapper mapper, ICacheService cacheService)
         {
             _bookRepository = bookRepository;
@@ -35,7 +37,7 @@ namespace LMS.Application.Services
             await _bookRepository.SaveChangesAsync();
 
 
-            await InvalidateUserCache(userId);
+           InvalidateUserCacheAsync(userId);
 
             return _mapper.Map<BookDTO>(book);
         }
@@ -88,7 +90,7 @@ namespace LMS.Application.Services
             await _bookRepository.UpdateAsync(book);
             await _bookRepository.SaveChangesAsync();
 
-            await InvalidateUserCache(userId);
+            InvalidateUserCacheAsync(userId);
 
 
             return _mapper.Map<BookDTO>(book);
@@ -113,7 +115,7 @@ namespace LMS.Application.Services
             await _bookRepository.DeleteAsync(book);
             await _bookRepository.SaveChangesAsync();
 
-            await InvalidateUserCache(userId);
+            InvalidateUserCacheAsync(userId);
         }
 
         public async Task<IEnumerable<BookListDTO>> SearchUserBooksAsync(string userId, string search)
@@ -153,10 +155,94 @@ namespace LMS.Application.Services
             await _bookRepository.SaveChangesAsync();
 
             if (!string.IsNullOrEmpty(book.UserId))
-                await InvalidateUserCache(book.UserId);
+                InvalidateUserCacheAsync(book.UserId);
 
-            await _cacheService.RemoveAsync("aiquery:admin:*");
+            _ = Task.Run(async () =>
+            {
+                try
+                {
+                    await TryRemoveCacheAsync("aiquery:admin:*");
+                }
+                catch (Exception ex)
+                {
+                   throw new Exception("Cache invalidation failed", ex);
+                }
+            });
+
         }
+
+        private void InvalidateUserCacheAsync(string userId)
+        {
+            _ = Task.Run(async () =>
+            {
+                try
+                {
+                    var tasks = new[]
+                    {
+                    TryRemoveByPatternAsync($"aiquery:{userId}:*"),
+                    TryRemoveByPatternAsync("aiquery:admin:*"),
+                };
+
+                    await Task.WhenAll(tasks);
+                }
+                catch (Exception ex)
+                {
+                  
+                    Console.WriteLine($"Background cache invalidation failed: {ex.Message}");
+                }
+            });
+        }
+
+
+        private async Task TryRemoveCacheAsync(string key)
+        {
+            try
+            {
+                using var cts = new CancellationTokenSource(CACHE_OPERATION_TIMEOUT);
+                var removeTask = _cacheService.RemoveAsync(key);
+                var completedTask = await Task.WhenAny(removeTask, Task.Delay(CACHE_OPERATION_TIMEOUT, cts.Token));
+
+                if (completedTask != removeTask)
+                {
+                  
+                    Console.WriteLine($"Cache remove timed out for key: {key}");
+                }
+                else
+                {
+                    cts.Cancel();
+                    await removeTask;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Cache remove failed for key {key}: {ex.Message}");
+            }
+        }
+
+        private async Task TryRemoveByPatternAsync(string pattern)
+        {
+            try
+            {
+                using var cts = new CancellationTokenSource(CACHE_OPERATION_TIMEOUT);
+                var removeTask = _cacheService.RemoveByPatternAsync(pattern);
+                var completedTask = await Task.WhenAny(removeTask, Task.Delay(CACHE_OPERATION_TIMEOUT, cts.Token));
+
+                if (completedTask != removeTask)
+                {
+                    Console.WriteLine($"Cache remove by pattern timed out for pattern: {pattern}");
+                }
+                else
+                {
+                    cts.Cancel();
+                    await removeTask;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Cache remove by pattern failed for {pattern}: {ex.Message}");
+            }
+        }
+
 
         public async Task<int> GetTotalBooksCountAsync()
         {
@@ -169,19 +255,6 @@ namespace LMS.Application.Services
             return await _bookRepository.GetBookCountByUserAsync(userId);
         }
 
-        private async Task InvalidateUserCache(string userId)
-        {
-
-            await _cacheService.RemoveByPatternAsync($"aiquery:{userId}:*");
-
-
-            await _cacheService.RemoveByPatternAsync("aiquery:admin:*");
-
-            await _cacheService.RemoveAsync($"insights:user:{userId}");
-            await _cacheService.RemoveAsync("insights:library");
-
-
-
-        }
+       
     }
 }

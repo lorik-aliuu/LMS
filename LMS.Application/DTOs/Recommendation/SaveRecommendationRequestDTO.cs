@@ -1,19 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
 
-namespace LMS.Application.DTOs.Recommendation
-{
-    public class SaveRecommendationRequestDTO
+    namespace LMS.Application.DTOs.Recommendation
     {
-        public string Title { get; set; } = null!;
-        public string Author { get; set; } = null!;
-        public string Genre { get; set; } = null!;
-        public decimal EstimatedPrice
+        public class SaveRecommendationRequestDTO
         {
-            get; set;
+            public string Title { get; set; } = null!;
+            public string Author { get; set; } = null!;
+            public string Genre { get; set; } = null!;
+            public decimal EstimatedPrice
+            {
+                get; set;
+            }
         }
     }
-}

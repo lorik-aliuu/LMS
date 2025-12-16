@@ -12,6 +12,7 @@ namespace LMS.Application.DTOs.Recommendation
         public string Author { get; set; } = string.Empty;
         public string Genre { get; set; } = string.Empty;
         public decimal? EstimatedPrice { get; set; }
+
         public string Reason { get; set; } = string.Empty;
     }
 }

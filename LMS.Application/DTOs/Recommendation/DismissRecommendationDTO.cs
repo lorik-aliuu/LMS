@@ -9,5 +9,9 @@ namespace LMS.Application.DTOs.Recommendation
     public class DismissRecommendationDTO
     {
         public string Title { get; set; } = null!;
+
+        public string Author { get; set; }
+
+    
     }
 }
