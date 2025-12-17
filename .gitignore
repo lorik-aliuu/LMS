@@ -362,3 +362,13 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 /client/.env
+
+# Nginx 
+nginx/nginx.exe
+nginx/contrib/
+nginx/unicode/
+nginx/vim/
+nginx/logs/
+nginx/cache/
+nginx/docs
+
