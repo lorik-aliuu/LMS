@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.14.36623.8
+# Visual Studio Version 18
+VisualStudioVersion = 18.1.11304.174 d18.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LMS.API", "LMS\LMS.API.csproj", "{13F7B59B-A04E-4B20-AAA6-9B9898F92D4D}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -14,6 +14,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LMS.Domain", "LMS.Domain\LMS.Domain.csproj", "{F99573C3-56EA-4911-A01F-071025D15196}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LMS.Infrastructure", "LMS.Infrastructure\LMS.Infrastructure.csproj", "{F6674843-8E74-4ACD-937E-BDAAB34451F0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LMS.UnitTests", "LMS.UnitTests\LMS.UnitTests.csproj", "{70239C05-41BE-43FA-BC28-1673FC048B2E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LMS.IntegrationTests", "LMS.IntegrationTests\LMS.IntegrationTests.csproj", "{0C660D83-EDB6-4075-9D81-E4905DDFE3DB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -37,6 +41,14 @@ Global
 		{F6674843-8E74-4ACD-937E-BDAAB34451F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F6674843-8E74-4ACD-937E-BDAAB34451F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F6674843-8E74-4ACD-937E-BDAAB34451F0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{70239C05-41BE-43FA-BC28-1673FC048B2E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70239C05-41BE-43FA-BC28-1673FC048B2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70239C05-41BE-43FA-BC28-1673FC048B2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70239C05-41BE-43FA-BC28-1673FC048B2E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0C660D83-EDB6-4075-9D81-E4905DDFE3DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0C660D83-EDB6-4075-9D81-E4905DDFE3DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0C660D83-EDB6-4075-9D81-E4905DDFE3DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0C660D83-EDB6-4075-9D81-E4905DDFE3DB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
