@@ -468,3 +468,16 @@ export async function getUserHabits(userId: string): Promise<UserReadingHabits> 
 
   return await response.json()
 }
+
+export async function revokeToken(refreshToken: string): Promise<void> {
+  const response = await authenticatedFetch(`${API_BASE_URL}/Auth/revoke`, {
+    method: "POST",
+    body: JSON.stringify({ refreshToken }),
+  })
+
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({}))
+    throw new Error(error.message || "Failed to revoke token")
+  }
+}
+

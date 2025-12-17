@@ -12,7 +12,9 @@ import {
   tryRefreshToken,
   setStoredUser,
   getStoredUser,
+  getRefreshToken,
 } from "@/lib/token-manager"
+import { revokeToken } from "@/lib/api"
 import { HubConnection, HubConnectionBuilder, LogLevel } from "@microsoft/signalr"
 import { useToast } from "@/hooks/use-toast" 
 
@@ -22,7 +24,7 @@ interface AuthContextType {
   isLoading: boolean
   isAuthenticated: boolean
   login: (authData: AuthResponse["data"]) => void
-  logout: () => void
+  logout: () => Promise<void>
   getValidToken: () => Promise<string | null>
   updateUser: (data: Partial<User>) => void
 }
@@ -37,7 +39,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const { toast } = useToast()
   const [hubConnection, setHubConnection] = useState<HubConnection | null>(null)
 
-  const logout = useCallback(() => {
+  const logout = useCallback(async () => {
+    const refreshToken = getRefreshToken()
+    if (refreshToken) {
+      try {
+        await revokeToken(refreshToken)
+      } catch (error) {
+        console.error("Failed to revoke token:", error)
+      }
+    }
     clearTokens()
     setToken(null)
     setUser(null)
