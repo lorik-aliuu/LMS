@@ -363,12 +363,12 @@ MigrationBackup/
 FodyWeavers.xsd
 /client/.env
 
-# Nginx 
-nginx/nginx.exe
-nginx/contrib/
-nginx/unicode/
-nginx/vim/
-nginx/logs/
-nginx/cache/
-nginx/docs
+nginx-1.28.0/nginx.exe
+nginx-1.28.0/contrib/
+nginx-1.28.0/unicode2nginx/
+nginx-1.28.0/vim/
+nginx-1.28.0/logs/
+nginx-1.28.0/cache/
+nginx-1.28.0/docs/
+nginx-1.28.0/html/
 
