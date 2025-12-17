@@ -11,14 +11,15 @@ import { UsersTab } from "@/components/admin/users-tab"
 import { BooksTab } from "@/components/admin/books-tab"
 import { getAllUsers, getAllBooksAdmin, getTotalBooksCount } from "@/lib/api"
 import { ChatAssistant } from "@/components/chat/chat-assistant"
+import { InsightsTab } from "@/components/admin/insights-tab"
 
 import type { AdminUser, AdminBook } from "@/lib/types"
 import { Loader2 } from "lucide-react"
 
-type Tab = "overview" | "users" | "books"
+type Tab = "overview" | "users" | "books" | "insights"
 
 export default function AdminDashboard() {
-  const { user, isAuthenticated, isLoading: authLoading, logout } = useAuth() 
+  const { user, isAuthenticated, isLoading: authLoading } = useAuth() 
   const router = useRouter()
   const [activeTab, setActiveTab] = useState<Tab>("overview")
   const [users, setUsers] = useState<AdminUser[]>([])
@@ -93,6 +94,7 @@ export default function AdminDashboard() {
               )}
               {activeTab === "users" && <UsersTab users={users} onRefresh={fetchData} currentUserId={user.userId} />}
               {activeTab === "books" && <BooksTab books={books} onRefresh={fetchData} />}
+              {activeTab === "insights" && <InsightsTab />}
             </>
           )}
         </main>

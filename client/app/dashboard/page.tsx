@@ -17,6 +17,7 @@ import { ReadingStatus } from "@/lib/types"
 import { Plus, Search, Loader2, BookOpen } from "lucide-react"
 import { ChatAssistant } from "@/components/chat/chat-assistant"
 import { RecommendationsCard } from "@/components/dashboard/recommendations-card"
+import { InsightsCard } from "@/components/dashboard/insights-card"
 
 export default function DashboardPage() {
   const { user, isLoading: authLoading, isAuthenticated } = useAuth()
@@ -161,6 +162,10 @@ export default function DashboardPage() {
             </p>
           </div>
         </div>
+
+          <InsightsCard />
+
+          
    <RecommendationsCard onBookAdded={fetchBooks} />
     
         <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">

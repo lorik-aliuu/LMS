@@ -2,9 +2,9 @@
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
-import { LayoutDashboard, Users, BookOpen } from "lucide-react"
+import { LayoutDashboard, Users, BookOpen, TrendingUp } from "lucide-react"
 
-type Tab = "overview" | "users" | "books"
+type Tab = "overview" | "users" | "books" | "insights"
 
 interface AdminSidebarProps {
   activeTab: Tab
@@ -16,6 +16,7 @@ export function AdminSidebar({ activeTab, onTabChange }: AdminSidebarProps) {
     { id: "overview" as Tab, label: "Overview", icon: LayoutDashboard },
     { id: "users" as Tab, label: "Users", icon: Users },
     { id: "books" as Tab, label: "All Books", icon: BookOpen },
+    { id: "insights" as Tab, label: "Insights", icon: TrendingUp },
   ]
 
   return (

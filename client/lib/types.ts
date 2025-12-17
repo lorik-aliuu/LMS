@@ -200,3 +200,39 @@ export interface RecommendationResponse {
     author: string
   }
 
+  export interface InsightItem {
+  type: string
+  title: string
+  description: string
+}
+
+export interface LibraryStatistics {
+  totalBooks: number
+  totalUsers?: number | null
+  completedBooksCount: number
+  inProgressBooksCount: number
+  mostPopularGenre: string
+  mostActiveUser?: string | null
+  genreDistribution: Record<string, number>
+  statusDistribution: Record<string, number>
+}
+
+export interface LibraryInsights {
+  summary: string
+  insights: InsightItem[]
+  statistics: LibraryStatistics
+  generatedAt: string
+}
+
+export interface UserReadingHabits {
+  userId: string
+  userName: string
+  summary: string
+  preferredGenres: string[]
+  totalBooks: number
+  completedBooks: number
+  booksInProgress: number
+  readingPattern: string
+  characteristics: string[]
+}
+

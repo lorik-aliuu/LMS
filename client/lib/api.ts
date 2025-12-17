@@ -1,4 +1,4 @@
-import type { Book, CreateBookDTO, UpdateBookDTO, UserProfile, UpdateProfileDTO, ChangePasswordDTO, DeleteAccountDTO, AdminUser, AdminBook, UpdateRoleDTO, RecommendationResponse, DismissRecommendationDTO, SaveRecommendationDTO } from "./types"
+import type { Book, CreateBookDTO, UpdateBookDTO, UserProfile, UpdateProfileDTO, ChangePasswordDTO, DeleteAccountDTO, AdminUser, AdminBook, UpdateRoleDTO, RecommendationResponse, DismissRecommendationDTO, SaveRecommendationDTO, UserReadingHabits, LibraryInsights } from "./types"
 import { getAccessToken, tryRefreshToken } from "./token-manager"
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL
@@ -33,7 +33,7 @@ async function authenticatedFetch(url: string, options: RequestInit = {}): Promi
     }
   }
 
-   
+
 
   return response
 }
@@ -167,7 +167,7 @@ export async function updateProfile(data: UpdateProfileDTO): Promise<void> {
     }),
   })
 
-    if (!response.ok) {
+  if (!response.ok) {
     const error = await response.json().catch(() => ({}))
     throw new Error(error.message || "Failed to update profile")
   }
@@ -183,7 +183,7 @@ export async function changePassword(data: ChangePasswordDTO): Promise<void> {
     }),
   })
 
-   if (!response.ok) {
+  if (!response.ok) {
     const error = await response.json().catch(() => ({}))
     throw new Error(error.message || "Failed to change password")
   }
@@ -368,7 +368,20 @@ export async function getRecommendations(count = 5): Promise<RecommendationRespo
   }
 
   const data = await response.json()
-  return data
+
+
+  const mappedRecommendations = (data.recommendations || []).map((rec: Record<string, unknown>) => ({
+    title: rec.title || rec.Title || "",
+    author: rec.author || rec.Author || "",
+    genre: rec.genre || rec.Genre || "",
+    estimatedPrice: rec.estimatedPrice ?? rec.EstimatedPrice ?? 0,
+    reason: rec.reason || rec.Reason || "",
+  }))
+
+  return {
+    ...data,
+    recommendations: mappedRecommendations,
+  }
 }
 
 export async function saveRecommendedBook(data: SaveRecommendationDTO): Promise<void> {
@@ -378,7 +391,7 @@ export async function saveRecommendedBook(data: SaveRecommendationDTO): Promise<
       Title: data.title,
       Author: data.author,
       Genre: data.genre,
-      Price: data.price,
+      EstimatedPrice: data.price,
     }),
   })
 
@@ -401,4 +414,57 @@ export async function dismissRecommendedBook(data: DismissRecommendationDTO): Pr
     const error = await response.json().catch(() => ({}))
     throw new Error(error.message || "Failed to dismiss recommendation")
   }
+}
+
+export async function getMyInsights(): Promise<LibraryInsights> {
+  const response = await authenticatedFetch(`${API_BASE_URL}/Insights/my-insights`, {
+    method: "GET",
+  })
+
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({}))
+    throw new Error(error.message || "Failed to fetch insights")
+  }
+
+  return await response.json()
+}
+
+
+export async function getMyHabits(): Promise<UserReadingHabits> {
+  const response = await authenticatedFetch(`${API_BASE_URL}/Insights/my-habits`, {
+    method: "GET",
+  })
+
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({}))
+    throw new Error(error.message || "Failed to fetch reading habits")
+  }
+
+  return await response.json()
+}
+
+export async function getLibraryInsights(): Promise<LibraryInsights> {
+  const response = await authenticatedFetch(`${API_BASE_URL}/Insights/library`, {
+    method: "GET",
+  })
+
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({}))
+    throw new Error(error.message || "Failed to fetch library insights")
+  }
+
+  return await response.json()
+}
+
+export async function getUserHabits(userId: string): Promise<UserReadingHabits> {
+  const response = await authenticatedFetch(`${API_BASE_URL}/Insights/user/${userId}/habits`, {
+    method: "GET",
+  })
+
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({}))
+    throw new Error(error.message || "Failed to fetch user habits")
+  }
+
+  return await response.json()
 }
