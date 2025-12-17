@@ -2,6 +2,7 @@
 using LMS.Application.ServiceInterfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace LMS.API.Controllers
 {
@@ -35,6 +36,7 @@ namespace LMS.API.Controllers
 
         [HttpPost("login")]
         [AllowAnonymous]
+        [EnableRateLimiting("LoginPolicy")]
         public async Task<IActionResult> Login([FromBody] LoginDTO loginDto)
         {
             var result = await _authService.LoginAsync(loginDto);

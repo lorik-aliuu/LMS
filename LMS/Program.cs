@@ -20,6 +20,8 @@ using FluentValidation.AspNetCore;
         using Microsoft.Extensions.DependencyInjection;
         using Microsoft.IdentityModel.Tokens;
         using Microsoft.OpenApi.Models;
+using System.Threading.RateLimiting;
+using Microsoft.AspNetCore.RateLimiting;
 using StackExchange.Redis;
 using System.Diagnostics;
         using System.Text;
@@ -205,12 +207,24 @@ builder.Services.AddScoped<IUserNotifierService, UserNotifierService>();
         builder.Services.AddValidatorsFromAssemblyContaining<RegisterDtoValidator>();
 
 
+builder.Services.AddRateLimiter(options =>
+{
+    options.AddPolicy("LoginPolicy", context =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: context.Request.HttpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+            factory: _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 3,             
+                Window = TimeSpan.FromSeconds(10), 
+                QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+                QueueLimit = 2                 
+            }));
+});
 
 
 
 
-
-        var app = builder.Build();
+var app = builder.Build();
 
 app.UseForwardedHeaders(new ForwardedHeadersOptions
 {
@@ -241,7 +255,9 @@ app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.UseRouting();
 
-            app.UseCors("AllowFrontend");
+app.UseRateLimiter();
+
+app.UseCors("AllowFrontend");
 
             app.UseAuthentication();
             app.UseAuthorization();
