@@ -100,6 +100,7 @@ export function BooksTab({ books, onRefresh }: BooksTabProps) {
                 <TableHead>Title</TableHead>
                 <TableHead>Author</TableHead>
                 <TableHead>Genre</TableHead>
+                <TableHead>Owner</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Rating</TableHead>
                 <TableHead className="w-[50px]"></TableHead>
@@ -108,7 +109,7 @@ export function BooksTab({ books, onRefresh }: BooksTabProps) {
             <TableBody>
               {filteredBooks.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={6} className="text-center text-muted-foreground">
+                  <TableCell colSpan={7} className="text-center text-muted-foreground">
                     No books found.
                   </TableCell>
                 </TableRow>
@@ -133,6 +134,7 @@ export function BooksTab({ books, onRefresh }: BooksTabProps) {
                     </TableCell>
                     <TableCell className="text-muted-foreground">{book.author}</TableCell>
                     <TableCell className="text-muted-foreground">{book.genre}</TableCell>
+                    <TableCell className="text-muted-foreground">@{book.userName || "Unknown"}</TableCell>
                     <TableCell>
                       <span
                         className={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${

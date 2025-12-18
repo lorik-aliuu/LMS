@@ -66,8 +66,9 @@ export function InsightsTab() {
 
   const filteredUsers = users.filter(
     (user) =>
-      user.userName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      user.fullName.toLowerCase().includes(searchQuery.toLowerCase()),
+      user.role !== "Admin" &&
+      (user.userName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      user.fullName.toLowerCase().includes(searchQuery.toLowerCase())),
   )
 
   return (
