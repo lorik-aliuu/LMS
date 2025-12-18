@@ -28,21 +28,50 @@ namespace LMS.Application.Services
             _logger = logger;
         }
 
-      
+
+        private static bool IsAdmin(UserProfileDTO user)
+        {
+            return Enum.TryParse<UserRole>(
+                user.Role,
+                ignoreCase: true,
+                out var role
+            ) && role == UserRole.Admin;
+        }
+
+
         public async Task<LibraryInsightsDTO> GenerateLibraryInsightsAsync(string? scopedUserId)
         {
             try
             {
+                if (scopedUserId != null)
+                {
+                    var scopedUser = await _userService.GetUserByIdAsync(scopedUserId);
+                    if (scopedUser != null && IsAdmin(scopedUser))
+                    {
+                        return new LibraryInsightsDTO
+                        {
+                            Summary = "Admin users are excluded from reading insights.",
+                            Insights = new(),
+                            Statistics = new LibraryStatisticsDTO(),
+                            GeneratedAt = DateTime.UtcNow
+                        };
+                    }
+                }
+
                 bool isUserScoped = scopedUserId != null;
 
                 var books = isUserScoped
                     ? await _bookRepository.GetBooksByUserIdAsync(scopedUserId!)
                     : await _bookRepository.GetAllAsync();
 
-                var users = await _userService.GetAllUsersAsync();
+                var users = (await _userService.GetAllUsersAsync())
+                    .Where(u => !IsAdmin(u))
+                    .ToList();
+
+                var allowedUserIds = users.Select(u => u.UserId).ToHashSet();
+                books = books.Where(b => allowedUserIds.Contains(b.UserId));
 
                 var statistics = CalculateStatistics(books, users, isUserScoped);
-
                 var insights = GenerateAutoInsights(books, statistics);
 
                 string aiSummary;
@@ -77,12 +106,18 @@ namespace LMS.Application.Services
         }
 
 
+
         public async Task<UserReadingHabitsDTO> SummarizeUserReadingHabitsAsync(string userId)
         {
             try
             {
                 var user = await _userService.GetUserByIdAsync(userId)
-                           ?? throw new KeyNotFoundException($"User {userId} not found");
+           ?? throw new KeyNotFoundException($"User {userId} not found");
+
+                if (IsAdmin(user))
+                {
+                    throw new InvalidOperationException("Admin users do not have reading habits.");
+                }
 
                 var books = await _bookRepository.GetBooksByUserIdAsync(userId);
 

@@ -17,14 +17,16 @@ namespace LMS.Application.Services
         private readonly IBookRepository _bookRepository;
         private readonly IMapper _mapper;
         private readonly ICacheService _cacheService;
+        private readonly IUserService _userService;
 
         private static readonly TimeSpan CACHE_OPERATION_TIMEOUT = TimeSpan.FromMilliseconds(500);
 
-        public BookService(IBookRepository bookRepository, IMapper mapper, ICacheService cacheService)
+        public BookService(IBookRepository bookRepository, IMapper mapper, ICacheService cacheService, IUserService userService)
         {
             _bookRepository = bookRepository;
             _mapper = mapper;
             _cacheService = cacheService;
+           _userService = userService;
         }
 
         public async Task<BookDTO> CreateBookAsync(CreateBookDTO createBookDto, string userId)
@@ -126,9 +128,29 @@ namespace LMS.Application.Services
 
         public async Task<IEnumerable<BookListDTO>> GetAllBooksForAdminAsync()
         {
-            var books = await _bookRepository.GetAllBooksForAdminAsync();
-            return _mapper.Map<IEnumerable<BookListDTO>>(books);
+            var books = await _bookRepository.GetAllBooksForAdminAsync(); 
+            var users = await _userService.GetAllUsersAsync();            
+
+          
+            var booksWithOwners = books.Select(b =>
+            {
+                var user = users.FirstOrDefault(u => u.UserId == b.UserId);
+                return new BookListDTO
+                {
+                    Id = b.Id,
+                    Title = b.Title,
+                    Author = b.Author,
+                    ReadingStatus = b.ReadingStatus,
+                    UserId = b.UserId,
+                    UserName = user?.UserName ?? "Unknown",
+                    Rating = b.Rating,
+                    Genre = b.Genre
+                };
+            });
+
+            return booksWithOwners;
         }
+
 
         public async Task<BookDTO> GetAnyBookByIdAsync(int bookId)
         {

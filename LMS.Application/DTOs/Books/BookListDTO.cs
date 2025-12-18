@@ -19,7 +19,10 @@ namespace LMS.Application.DTOs.Books
             public int? Rating { get; set; }             
             public string? CoverImageUrl { get; set; }
 
-  
+        public string UserId { get; set; }        
+        public string UserName { get; set; }
+
+
     }
     
 }
