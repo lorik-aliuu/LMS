@@ -132,11 +132,11 @@ Steps to Run
 
 4.Access Points:
 
-Main Application: http://localhost:8081
+Main Application: `http://localhost:8081`
 
-API Documentation (Swagger): http://localhost:5298/swagger
+API Documentation (Swagger): `http://localhost:5298/swagger`
 
-Redis Insight: http://localhost:8001
+Redis Insight: `http://localhost:8001`
 
 ### Future Roadmap
 
