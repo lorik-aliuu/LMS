@@ -1,7 +1,7 @@
 LMS (Library Management System) – Project Documentation
 Overview
 
-LMS is a modern library management system built using .NET 9 Web API for the backend and Next.js for the frontend. It provides role-based access for users and admins, real-time notifications, AI-powered insights, and recommendations. The system is fully containerized using Docker and orchestrated with Docker Compose. It follows Clean Architecture with separation of concerns across API, Application, Infrastructure, and Domain layers.
+LMS is a modern library management system built using .NET 9 Web API for the backend and Next.js for the frontend. It provides role-based access for users and admins, real-time notifications, AI-powered summaries,personal insights and user habits, and recommendations. The system is fully containerized using Docker and orchestrated with Docker Compose. It follows Clean Architecture with separation of concerns across API, Application, Infrastructure, and Domain layers.
 
 Tech stack
 
@@ -118,7 +118,9 @@ Steps to Run
 4.Access Points:
 
 Main Application: http://localhost:8081
+
 API Documentation (Swagger): http://localhost:5298/swagger
+
 Redis Insight: http://localhost:8001
 
 Future Roadmap
