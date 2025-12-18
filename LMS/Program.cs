@@ -66,10 +66,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowFrontend", policy =>
     {
         policy.WithOrigins(
-                "http://localhost",          
-                "http://localhost:80",        
-                "http://localhost:3000",
-                "http://localhost:8080"
+              "http://localhost:8081"
 
             )
             .AllowAnyMethod()
@@ -262,11 +259,8 @@ app.UseCors("AllowFrontend");
             app.UseAuthentication();
             app.UseAuthorization();
 
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapControllers();
-    endpoints.MapHub<UserEventHub>("/hubs/user-event");
-}); 
+app.MapControllers();
+app.MapHub<UserEventHub>("/hubs/user-event");
 
 
 
@@ -275,7 +269,11 @@ using (var scope = app.Services.CreateScope())
             var services = scope.ServiceProvider;
             try
             {
-                var configuration = services.GetRequiredService<IConfiguration>();
+        var context = services.GetRequiredService<ApplicationDbContext>();
+
+        await context.Database.MigrateAsync();
+
+        var configuration = services.GetRequiredService<IConfiguration>();
                 var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
                 var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
 
@@ -303,6 +301,7 @@ using (var scope = app.Services.CreateScope())
 
     
         }
+
 
 
         static async Task SeedDefaultRolesAndAdmin(
@@ -345,7 +344,9 @@ using (var scope = app.Services.CreateScope())
                 }
             }
         }
-    app.Run();
+
+
+app.Run();
 
 
 public partial class Program { }
