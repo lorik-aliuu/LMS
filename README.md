@@ -6,12 +6,19 @@ LMS is a modern library management system built using .NET 9 Web API for the bac
 Tech stack
 
 Backend: .NET 9 Web API, C#
+
 Frontend: Next.js, React
+
 Database: MSSQL for main data, Redis for caching and rate limiting
+
 Real-time communication: SignalR
+
 AI / LLM: OpenAI API for AI query agent, recommendations, and insights
+
 Containerization: Docker, Docker Compose
+
 Reverse Proxy: Nginx
+
 Testing: xUnit, Moq
 
 Architecture & Infrastructure
@@ -19,15 +26,22 @@ Architecture & Infrastructure
 The project follows Clean Architecture with layered separation:
 
 API Layer: ASP.NET Core Web API exposing endpoints for frontend consumption.
+
 Application Layer: Business logic, services, DTOs, and validation.
+
 Domain Layer: Core entities and domain logic.
+
 Infrastructure Layer: Database context (MSSQL), caching (Redis), SignalR hubs, OpenAI integration, and repositories.
+
 
 Docker & Nginx Orchestration
 
 The system is orchestrated using Docker Compose
+
 Reverse Proxy: Nginx acts as the single entry point (port 8081), routing traffic to the Frontend, API, and WebSockets.
+
 WebSocket Optimization: Nginx is specifically configured with Upgrade and Connection headers to support SignalR persistent connections.
+
 Service Isolation: The Database and Redis instances are kept off the public internet, accessible only by the Backend within the Docker bridge network.
 
 Entities
