@@ -3,7 +3,7 @@ Overview
 
 LMS is a modern library management system built using .NET 9 Web API for the backend and Next.js for the frontend. It provides role-based access for users and admins, real-time notifications, AI-powered summaries,personal insights and user habits, and recommendations. The system is fully containerized using Docker and orchestrated with Docker Compose. It follows Clean Architecture with separation of concerns across API, Application, Infrastructure, and Domain layers.
 
-Tech stack
+### Tech stack
 
 Backend: .NET 9 Web API, C#
 
@@ -21,7 +21,8 @@ Reverse Proxy: Nginx
 
 Testing: xUnit, Moq
 
-Architecture & Infrastructure
+
+### Architecture & Infrastructure
 
 The project follows Clean Architecture with layered separation:
 
@@ -34,7 +35,7 @@ Domain Layer: Core entities and domain logic.
 Infrastructure Layer: Database context (MSSQL), caching (Redis), SignalR hubs, OpenAI integration, and repositories.
 
 
-Docker & Nginx Orchestration
+### Docker & Nginx Orchestration
 
 The system is orchestrated using Docker Compose
 
@@ -44,7 +45,8 @@ WebSocket Optimization: Nginx is specifically configured with Upgrade and Connec
 
 Service Isolation: The Database and Redis instances are kept off the public internet, accessible only by the Backend within the Docker bridge network.
 
-Entities
+
+### Entities
 
 User
 
@@ -57,7 +59,7 @@ Book
 Properties: Title, Author, Genre, Price, ReadingStatus(enum), UserId, Rating, PublicationYear, CoverImageUrl.
 Relationships: Each book belongs to one user; a user can have many books.
 
-Features
+### Features
 
 Authentication & Authorization
 
@@ -108,14 +110,13 @@ Testing
 Unit tests for core services and validators.
 Integration tests for key API endpoints.
 
- API Documentation
+###  API Documentation - Postman
 
-###  Postman Collection
 For easier API testing, you can import  pre-configured Postman collection:
 
 * **[Download LMS API Collection](https://raw.githubusercontent.com/lorik-aliuu/LMS/66b7ffa3e16f5d276c4eeeadef241ed92a8bc945/postman-collection/LMSAPI.postman_collection.json)**
 
-Setup & Installation
+### Setup & Installation
 
 Prerequisites
 Docker Desktop installed.
@@ -137,9 +138,12 @@ API Documentation (Swagger): http://localhost:5298/swagger
 
 Redis Insight: http://localhost:8001
 
-Future Roadmap
+### Future Roadmap
+
 CI/CD Pipeline: Implement GitHub Actions to automatically run unit tests and build Docker images on every push to ensure code stability.
+
 Unit Test Coverage: Increase test coverage for the Infrastructure layer and add Integration Tests for the SignalR notification flow.
+
 Advanced Analytics Integration with Grafana and Prometheus to monitor API performance and Redis cache hit rates.
 
 
