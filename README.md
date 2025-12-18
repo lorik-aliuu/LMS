@@ -108,10 +108,15 @@ Docker Desktop installed.
 An OpenAI API Key (for AI features).
 
 Steps to Run
+
 1.Clone the Repo
+
 2.Update your .env files with your OpenAI_ApiKey,ConnectionStrings, JWT, default admin credentials
+
 3.Launch via Docker: docker-compose up -d --build
+
 4.Access Points:
+
 Main Application: http://localhost:8081
 API Documentation (Swagger): http://localhost:5298/swagger
 Redis Insight: http://localhost:8001
