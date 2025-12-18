@@ -13,7 +13,7 @@ Database: MSSQL for main data, Redis for caching and rate limiting
 
 Real-time communication: SignalR
 
-AI / LLM: OpenAI API for AI query agent, recommendations, and insights
+AI / LLM: OpenAI API for AI query agent, recommendations, and summaries
 
 Containerization: Docker, Docker Compose
 
