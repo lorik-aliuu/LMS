@@ -1,0 +1,2528 @@
+{
+	"info": {
+		"_postman_id": "eb73cfef-443d-4984-a88f-e6302128e0e0",
+		"name": "Library Management System API",
+		"description": "# **LMS API Documentation (Overview)**\n\nThe LMS API provides endpoints for managing users, authentication, books, AI queries, recommendations, and library insights. Each endpoint includes a short description that explains its purpose and behavior.\n\n### **Authentication**\n\n- **AuthController** handles registration, login, token refresh, and logout.\n    \n- Endpoints like `/register`, `/login`, and `/refresh` allow **anonymous access**.\n    \n- Other endpoints require authentication and proper roles.\n    \n\n### **User Management**\n\n- **UserController** allows users to manage their profile, password, and account.\n    \n- Admins can view all users, get a specific user by ID, delete users, and update roles.\n    \n- Role-based access is clearly defined for each endpoint in the documentation.\n    \n\n### **Book Management**\n\n- **BookController** provides CRUD operations for books.\n    \n- Users can manage their own books (`my-books` endpoints).\n    \n- Admins have full access to all books , including counts and individual book details.\n    \n\n### **AI Queries**\n\n- **AiQueryController** allows users and admins to send AI queries about their books or the library.\n    \n- Example queries are provided to guide usage.\n    \n- Access depends on roles (admins see global queries, users see personal queries).\n    \n\n### **Library Insights**\n\n- **InsightsController** provides insights and statistics about reading habits.\n    \n- Users can access their own insights, admins can access library-wide insights.\n    \n\n### **Recommendations**\n\n- **RecommendationController** allows users to get book recommendations, save them, or dismiss them.\n    \n- Requires authentication with the User role.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "41952450"
+	},
+	"item": [
+		{
+			"name": "api",
+			"item": [
+				{
+					"name": "AiQuery",
+					"item": [
+						{
+							"name": "query",
+							"item": [
+								{
+									"name": "/api/AiQuery/query",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"query\": \"string\"\n}",
+											"options": {
+												"raw": {
+													"headerFamily": "json",
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/api/AiQuery/query",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"AiQuery",
+												"query"
+											]
+										},
+										"description": "Process a natural language AI query for library data. Users get their own data; admins can query for all users."
+									},
+									"response": [
+										{
+											"name": "OK",
+											"originalRequest": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/json"
+													},
+													{
+														"key": "Authorization",
+														"value": "Bearer <token>",
+														"description": "Added as a part of security scheme: bearer"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n  \"query\": \"string\"\n}",
+													"options": {
+														"raw": {
+															"headerFamily": "json",
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{baseUrl}}/api/AiQuery/query",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"AiQuery",
+														"query"
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "text",
+											"header": [],
+											"cookie": [],
+											"body": ""
+										}
+									]
+								}
+							]
+						},
+						{
+							"name": "examples",
+							"item": [
+								{
+									"name": "/api/AiQuery/examples",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/api/AiQuery/examples",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"AiQuery",
+												"examples"
+											]
+										},
+										"description": "Retrieve example AI queries. Returns different examples for regular users vs admins."
+									},
+									"response": [
+										{
+											"name": "OK",
+											"originalRequest": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Authorization",
+														"value": "Bearer <token>",
+														"description": "Added as a part of security scheme: bearer"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/api/AiQuery/examples",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"AiQuery",
+														"examples"
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "text",
+											"header": [],
+											"cookie": [],
+											"body": ""
+										}
+									]
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Auth",
+					"item": [
+						{
+							"name": "register",
+							"item": [
+								{
+									"name": "/api/Auth/register",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"firstName\": \"string\",\n  \"lastName\": \"string\",\n  \"userName\": \"string\",\n  \"email\": \"string\",\n  \"password\": \"string\",\n  \"confirmPassword\": \"string\"\n}",
+											"options": {
+												"raw": {
+													"headerFamily": "json",
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/api/Auth/register",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"Auth",
+												"register"
+											]
+										},
+										"description": "# POST /api/User/register\n\nA **POST** request to create a new user account.\n\n**Details:**\n\n- **Authentication**: None (public endpoint)\n    \n- **Base URL**: `{{baseUrl}}`\n    \n- **Content-Type**: application/json"
+									},
+									"response": [
+										{
+											"name": "OK",
+											"originalRequest": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/json"
+													},
+													{
+														"key": "Authorization",
+														"value": "Bearer <token>",
+														"description": "Added as a part of security scheme: bearer"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n  \"firstName\": \"string\",\n  \"lastName\": \"string\",\n  \"userName\": \"string\",\n  \"email\": \"string\",\n  \"password\": \"string\",\n  \"confirmPassword\": \"string\"\n}",
+													"options": {
+														"raw": {
+															"headerFamily": "json",
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{baseUrl}}/api/Auth/register",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"Auth",
+														"register"
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "text",
+											"header": [],
+											"cookie": [],
+											"body": ""
+										}
+									]
+								}
+							]
+						},
+						{
+							"name": "login",
+							"item": [
+								{
+									"name": "/api/Auth/login",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"email\": \"string\",\n  \"password\": \"string\"\n}",
+											"options": {
+												"raw": {
+													"headerFamily": "json",
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/api/Auth/login",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"Auth",
+												"login"
+											]
+										},
+										"description": "# POST /api/User/login\n\nA **POST** request to authenticate a user and obtain a login token.\n\n**Details:**\n\n- **Authentication**: None (public endpoint)\n    \n- **Base URL**: `{{baseUrl}}`\n    \n- **Content-Type**: application/json"
+									},
+									"response": [
+										{
+											"name": "OK",
+											"originalRequest": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/json"
+													},
+													{
+														"key": "Authorization",
+														"value": "Bearer <token>",
+														"description": "Added as a part of security scheme: bearer"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n  \"email\": \"string\",\n  \"password\": \"string\"\n}",
+													"options": {
+														"raw": {
+															"headerFamily": "json",
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{baseUrl}}/api/Auth/login",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"Auth",
+														"login"
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "text",
+											"header": [],
+											"cookie": [],
+											"body": ""
+										}
+									]
+								}
+							]
+						},
+						{
+							"name": "revoke",
+							"item": [
+								{
+									"name": "/api/Auth/revoke",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"refreshToken\": \"string\"\n}",
+											"options": {
+												"raw": {
+													"headerFamily": "json",
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/api/Auth/revoke",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"Auth",
+												"revoke"
+											]
+										},
+										"description": "Revoke a refresh token and log out the user. Expects `RevokeTokenRequestDTO` in the body."
+									},
+									"response": [
+										{
+											"name": "OK",
+											"originalRequest": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/json"
+													},
+													{
+														"key": "Authorization",
+														"value": "Bearer <token>",
+														"description": "Added as a part of security scheme: bearer"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n  \"refreshToken\": \"string\"\n}",
+													"options": {
+														"raw": {
+															"headerFamily": "json",
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{baseUrl}}/api/Auth/revoke",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"Auth",
+														"revoke"
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "text",
+											"header": [],
+											"cookie": [],
+											"body": ""
+										}
+									]
+								}
+							]
+						},
+						{
+							"name": "refresh",
+							"item": [
+								{
+									"name": "/api/Auth/refresh",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"accessToken\": \"string\",\n  \"refreshToken\": \"string\",\n  \"role\": \"string\"\n}",
+											"options": {
+												"raw": {
+													"headerFamily": "json",
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/api/Auth/refresh",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"Auth",
+												"refresh"
+											]
+										},
+										"description": "Refresh an access token using a refresh token. Expects `RefreshTokenRequestDTO` in the body. Returns new tokens."
+									},
+									"response": [
+										{
+											"name": "OK",
+											"originalRequest": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/json"
+													},
+													{
+														"key": "Authorization",
+														"value": "Bearer <token>",
+														"description": "Added as a part of security scheme: bearer"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n  \"accessToken\": \"string\",\n  \"refreshToken\": \"string\",\n  \"role\": \"string\"\n}",
+													"options": {
+														"raw": {
+															"headerFamily": "json",
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{baseUrl}}/api/Auth/refresh",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"Auth",
+														"refresh"
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "text",
+											"header": [],
+											"cookie": [],
+											"body": ""
+										}
+									]
+								}
+							]
+						},
+						{
+							"name": "test",
+							"item": [
+								{
+									"name": "/api/Auth/test",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/api/Auth/test",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"Auth",
+												"test"
+											]
+										},
+										"description": "Test if the user is authenticated. Returns user ID, username, and roles."
+									},
+									"response": [
+										{
+											"name": "OK",
+											"originalRequest": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Authorization",
+														"value": "Bearer <token>",
+														"description": "Added as a part of security scheme: bearer"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/api/Auth/test",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"Auth",
+														"test"
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "text",
+											"header": [],
+											"cookie": [],
+											"body": ""
+										}
+									]
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Book",
+					"item": [
+						{
+							"name": "my-books",
+							"item": [
+								{
+									"name": "count",
+									"item": [
+										{
+											"name": "/api/Book/my-books/count",
+											"request": {
+												"method": "GET",
+												"header": [],
+												"url": {
+													"raw": "{{baseUrl}}/api/Book/my-books/count",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"Book",
+														"my-books",
+														"count"
+													]
+												},
+												"description": "Get the total number of books for the authenticated user."
+											},
+											"response": [
+												{
+													"name": "OK",
+													"originalRequest": {
+														"method": "GET",
+														"header": [
+															{
+																"key": "Authorization",
+																"value": "Bearer <token>",
+																"description": "Added as a part of security scheme: bearer"
+															}
+														],
+														"url": {
+															"raw": "{{baseUrl}}/api/Book/my-books/count",
+															"host": [
+																"{{baseUrl}}"
+															],
+															"path": [
+																"api",
+																"Book",
+																"my-books",
+																"count"
+															]
+														}
+													},
+													"status": "OK",
+													"code": 200,
+													"_postman_previewlanguage": "text",
+													"header": [],
+													"cookie": [],
+													"body": ""
+												}
+											]
+										}
+									]
+								},
+								{
+									"name": "/api/Book/my-books",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/api/Book/my-books",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"Book",
+												"my-books"
+											]
+										},
+										"description": "Get all books belonging to the authenticated user."
+									},
+									"response": [
+										{
+											"name": "OK",
+											"originalRequest": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Authorization",
+														"value": "Bearer <token>",
+														"description": "Added as a part of security scheme: bearer"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/api/Book/my-books",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"Book",
+														"my-books"
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "text",
+											"header": [],
+											"cookie": [],
+											"body": ""
+										}
+									]
+								}
+							]
+						},
+						{
+							"name": "{id}",
+							"item": [
+								{
+									"name": "/api/Book/:id",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/api/Book/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"Book",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "9128"
+												}
+											]
+										},
+										"description": "Get details of a specific book by ID (must belong to the authenticated user)."
+									},
+									"response": [
+										{
+											"name": "OK",
+											"originalRequest": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Authorization",
+														"value": "Bearer <token>",
+														"description": "Added as a part of security scheme: bearer"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/api/Book/:id",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"Book",
+														":id"
+													],
+													"variable": [
+														{
+															"key": "id",
+															"value": "9128"
+														}
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "text",
+											"header": [],
+											"cookie": [],
+											"body": ""
+										}
+									]
+								},
+								{
+									"name": "/api/Book/:id",
+									"request": {
+										"method": "PUT",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"title\": \"string\",\n  \"author\": \"string\",\n  \"genre\": \"string\",\n  \"price\": 4697.56344045664,\n  \"readingStatus\": 2,\n  \"publicationYear\": 4357,\n  \"coverImageUrl\": \"string\",\n  \"rating\": 3056\n}",
+											"options": {
+												"raw": {
+													"headerFamily": "json",
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/api/Book/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"Book",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "9128"
+												}
+											]
+										},
+										"description": "Update an existing book belonging to the authenticated user. Expects `UpdateBookDTO`."
+									},
+									"response": [
+										{
+											"name": "OK",
+											"originalRequest": {
+												"method": "PUT",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/json"
+													},
+													{
+														"key": "Authorization",
+														"value": "Bearer <token>",
+														"description": "Added as a part of security scheme: bearer"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n  \"title\": \"string\",\n  \"author\": \"string\",\n  \"genre\": \"string\",\n  \"price\": 4697.56344045664,\n  \"readingStatus\": 2,\n  \"publicationYear\": 4357,\n  \"coverImageUrl\": \"string\",\n  \"rating\": 3056\n}",
+													"options": {
+														"raw": {
+															"headerFamily": "json",
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{baseUrl}}/api/Book/:id",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"Book",
+														":id"
+													],
+													"variable": [
+														{
+															"key": "id",
+															"value": "9128"
+														}
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "text",
+											"header": [],
+											"cookie": [],
+											"body": ""
+										}
+									]
+								},
+								{
+									"name": "/api/Book/:id",
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/api/Book/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"Book",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "9128"
+												}
+											]
+										},
+										"description": "Delete a book belonging to the authenticated user."
+									},
+									"response": [
+										{
+											"name": "OK",
+											"originalRequest": {
+												"method": "DELETE",
+												"header": [
+													{
+														"key": "Authorization",
+														"value": "Bearer <token>",
+														"description": "Added as a part of security scheme: bearer"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/api/Book/:id",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"Book",
+														":id"
+													],
+													"variable": [
+														{
+															"key": "id",
+															"value": "9128"
+														}
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "text",
+											"header": [],
+											"cookie": [],
+											"body": ""
+										}
+									]
+								}
+							]
+						},
+						{
+							"name": "search",
+							"item": [
+								{
+									"name": "/api/Book/search",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/api/Book/search?search=string",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"Book",
+												"search"
+											],
+											"query": [
+												{
+													"key": "search",
+													"value": "string"
+												}
+											]
+										},
+										"description": "Search the authenticated user's books by title, author, or genre."
+									},
+									"response": [
+										{
+											"name": "OK",
+											"originalRequest": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Authorization",
+														"value": "Bearer <token>",
+														"description": "Added as a part of security scheme: bearer"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/api/Book/search?search=string",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"Book",
+														"search"
+													],
+													"query": [
+														{
+															"key": "search",
+															"value": "string"
+														}
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "text",
+											"header": [],
+											"cookie": [],
+											"body": ""
+										}
+									]
+								}
+							]
+						},
+						{
+							"name": "admin",
+							"item": [
+								{
+									"name": "all",
+									"item": [
+										{
+											"name": "/api/Book/admin/all",
+											"request": {
+												"method": "GET",
+												"header": [],
+												"url": {
+													"raw": "{{baseUrl}}/api/Book/admin/all",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"Book",
+														"admin",
+														"all"
+													]
+												},
+												"description": "Get all books in the library (admin only)"
+											},
+											"response": [
+												{
+													"name": "OK",
+													"originalRequest": {
+														"method": "GET",
+														"header": [
+															{
+																"key": "Authorization",
+																"value": "Bearer <token>",
+																"description": "Added as a part of security scheme: bearer"
+															}
+														],
+														"url": {
+															"raw": "{{baseUrl}}/api/Book/admin/all",
+															"host": [
+																"{{baseUrl}}"
+															],
+															"path": [
+																"api",
+																"Book",
+																"admin",
+																"all"
+															]
+														}
+													},
+													"status": "OK",
+													"code": 200,
+													"_postman_previewlanguage": "text",
+													"header": [],
+													"cookie": [],
+													"body": ""
+												}
+											]
+										}
+									]
+								},
+								{
+									"name": "{id}",
+									"item": [
+										{
+											"name": "/api/Book/admin/:id",
+											"request": {
+												"method": "GET",
+												"header": [],
+												"url": {
+													"raw": "{{baseUrl}}/api/Book/admin/:id",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"Book",
+														"admin",
+														":id"
+													],
+													"variable": [
+														{
+															"key": "id",
+															"value": "9128"
+														}
+													]
+												},
+												"description": "Get details of any book by ID (admin only)."
+											},
+											"response": [
+												{
+													"name": "OK",
+													"originalRequest": {
+														"method": "GET",
+														"header": [
+															{
+																"key": "Authorization",
+																"value": "Bearer <token>",
+																"description": "Added as a part of security scheme: bearer"
+															}
+														],
+														"url": {
+															"raw": "{{baseUrl}}/api/Book/admin/:id",
+															"host": [
+																"{{baseUrl}}"
+															],
+															"path": [
+																"api",
+																"Book",
+																"admin",
+																":id"
+															],
+															"variable": [
+																{
+																	"key": "id",
+																	"value": "9128"
+																}
+															]
+														}
+													},
+													"status": "OK",
+													"code": 200,
+													"_postman_previewlanguage": "text",
+													"header": [],
+													"cookie": [],
+													"body": ""
+												}
+											]
+										},
+										{
+											"name": "/api/Book/admin/:id",
+											"request": {
+												"method": "DELETE",
+												"header": [],
+												"url": {
+													"raw": "{{baseUrl}}/api/Book/admin/:id",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"Book",
+														"admin",
+														":id"
+													],
+													"variable": [
+														{
+															"key": "id",
+															"value": "9128"
+														}
+													]
+												},
+												"description": "Delete any book by ID (admin only)"
+											},
+											"response": [
+												{
+													"name": "OK",
+													"originalRequest": {
+														"method": "DELETE",
+														"header": [
+															{
+																"key": "Authorization",
+																"value": "Bearer <token>",
+																"description": "Added as a part of security scheme: bearer"
+															}
+														],
+														"url": {
+															"raw": "{{baseUrl}}/api/Book/admin/:id",
+															"host": [
+																"{{baseUrl}}"
+															],
+															"path": [
+																"api",
+																"Book",
+																"admin",
+																":id"
+															],
+															"variable": [
+																{
+																	"key": "id",
+																	"value": "9128"
+																}
+															]
+														}
+													},
+													"status": "OK",
+													"code": 200,
+													"_postman_previewlanguage": "text",
+													"header": [],
+													"cookie": [],
+													"body": ""
+												}
+											]
+										}
+									]
+								},
+								{
+									"name": "count",
+									"item": [
+										{
+											"name": "/api/Book/admin/count",
+											"request": {
+												"method": "GET",
+												"header": [],
+												"url": {
+													"raw": "{{baseUrl}}/api/Book/admin/count",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"Book",
+														"admin",
+														"count"
+													]
+												},
+												"description": "Get the total number of books in the library (admin only)"
+											},
+											"response": [
+												{
+													"name": "OK",
+													"originalRequest": {
+														"method": "GET",
+														"header": [
+															{
+																"key": "Authorization",
+																"value": "Bearer <token>",
+																"description": "Added as a part of security scheme: bearer"
+															}
+														],
+														"url": {
+															"raw": "{{baseUrl}}/api/Book/admin/count",
+															"host": [
+																"{{baseUrl}}"
+															],
+															"path": [
+																"api",
+																"Book",
+																"admin",
+																"count"
+															]
+														}
+													},
+													"status": "OK",
+													"code": 200,
+													"_postman_previewlanguage": "text",
+													"header": [],
+													"cookie": [],
+													"body": ""
+												}
+											]
+										}
+									]
+								}
+							]
+						},
+						{
+							"name": "/api/Book",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"title\": \"string\",\n  \"author\": \"string\",\n  \"genre\": \"string\",\n  \"price\": 4697.56344045664,\n  \"readingStatus\": 2,\n  \"publicationYear\": 4357,\n  \"coverImageUrl\": \"string\",\n  \"rating\": 3056\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/Book",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"Book"
+									]
+								},
+								"description": "Create a new book for the authenticated user. Expects `CreateBookDTO.`"
+							},
+							"response": [
+								{
+									"name": "OK",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer <token>",
+												"description": "Added as a part of security scheme: bearer"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"title\": \"string\",\n  \"author\": \"string\",\n  \"genre\": \"string\",\n  \"price\": 4697.56344045664,\n  \"readingStatus\": 2,\n  \"publicationYear\": 4357,\n  \"coverImageUrl\": \"string\",\n  \"rating\": 3056\n}",
+											"options": {
+												"raw": {
+													"headerFamily": "json",
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/api/Book",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"Book"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "text",
+									"header": [],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Insights",
+					"item": [
+						{
+							"name": "library",
+							"item": [
+								{
+									"name": "/api/Insights/library",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "text/plain"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/api/Insights/library",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"Insights",
+												"library"
+											]
+										},
+										"description": "Get library-wide insights for all users. Returns `LibraryInsightsDTO`."
+									},
+									"response": [
+										{
+											"name": "OK",
+											"originalRequest": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "text/plain"
+													},
+													{
+														"key": "Authorization",
+														"value": "Bearer <token>",
+														"description": "Added as a part of security scheme: bearer"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/api/Insights/library",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"Insights",
+														"library"
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"summary\": \"string\",\n  \"insights\": [\n    {\n      \"type\": \"string\",\n      \"title\": \"string\",\n      \"description\": \"string\"\n    },\n    {\n      \"type\": \"string\",\n      \"title\": \"string\",\n      \"description\": \"string\"\n    }\n  ],\n  \"statistics\": {\n    \"totalBooks\": 3526,\n    \"totalUsers\": 81,\n    \"mostPopularGenre\": \"string\",\n    \"mostActiveUser\": \"string\",\n    \"completedBooksCount\": 1840,\n    \"inProgressBooksCount\": 3824,\n    \"genreDistribution\": {\n      \"key_0\": 847\n    },\n    \"statusDistribution\": {\n      \"key_0\": 7729,\n      \"key_1\": 5697,\n      \"key_2\": 1571\n    }\n  },\n  \"generatedAt\": \"2007-06-10T18:29:57.116Z\"\n}"
+										}
+									]
+								}
+							]
+						},
+						{
+							"name": "my-insights",
+							"item": [
+								{
+									"name": "/api/Insights/my-insights",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "text/plain"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/api/Insights/my-insights",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"Insights",
+												"my-insights"
+											]
+										},
+										"description": "Get personalized insights for the authenticated user. Returns `LibraryInsightsDTO`."
+									},
+									"response": [
+										{
+											"name": "OK",
+											"originalRequest": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "text/plain"
+													},
+													{
+														"key": "Authorization",
+														"value": "Bearer <token>",
+														"description": "Added as a part of security scheme: bearer"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/api/Insights/my-insights",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"Insights",
+														"my-insights"
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"summary\": \"string\",\n  \"insights\": [\n    {\n      \"type\": \"string\",\n      \"title\": \"string\",\n      \"description\": \"string\"\n    },\n    {\n      \"type\": \"string\",\n      \"title\": \"string\",\n      \"description\": \"string\"\n    }\n  ],\n  \"statistics\": {\n    \"totalBooks\": 3526,\n    \"totalUsers\": 81,\n    \"mostPopularGenre\": \"string\",\n    \"mostActiveUser\": \"string\",\n    \"completedBooksCount\": 1840,\n    \"inProgressBooksCount\": 3824,\n    \"genreDistribution\": {\n      \"key_0\": 847\n    },\n    \"statusDistribution\": {\n      \"key_0\": 7729,\n      \"key_1\": 5697,\n      \"key_2\": 1571\n    }\n  },\n  \"generatedAt\": \"2007-06-10T18:29:57.116Z\"\n}"
+										}
+									]
+								}
+							]
+						},
+						{
+							"name": "my-habits",
+							"item": [
+								{
+									"name": "/api/Insights/my-habits",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "text/plain"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/api/Insights/my-habits",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"Insights",
+												"my-habits"
+											]
+										},
+										"description": "Get reading habits summary for the authenticated user. Returns `UserReadingHabitsDTO`"
+									},
+									"response": [
+										{
+											"name": "OK",
+											"originalRequest": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "text/plain"
+													},
+													{
+														"key": "Authorization",
+														"value": "Bearer <token>",
+														"description": "Added as a part of security scheme: bearer"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/api/Insights/my-habits",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"Insights",
+														"my-habits"
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"userId\": \"string\",\n  \"userName\": \"string\",\n  \"summary\": \"string\",\n  \"preferredGenres\": [\n    \"string\",\n    \"string\"\n  ],\n  \"totalBooks\": 7167,\n  \"completedBooks\": 651,\n  \"booksInProgress\": 369,\n  \"readingPattern\": \"string\",\n  \"characteristics\": [\n    \"string\",\n    \"string\"\n  ]\n}"
+										}
+									]
+								}
+							]
+						},
+						{
+							"name": "user",
+							"item": [
+								{
+									"name": "{userId}",
+									"item": [
+										{
+											"name": "habits",
+											"item": [
+												{
+													"name": "/api/Insights/user/:userId/habits",
+													"request": {
+														"method": "GET",
+														"header": [
+															{
+																"key": "Accept",
+																"value": "text/plain"
+															}
+														],
+														"url": {
+															"raw": "{{baseUrl}}/api/Insights/user/:userId/habits",
+															"host": [
+																"{{baseUrl}}"
+															],
+															"path": [
+																"api",
+																"Insights",
+																"user",
+																":userId",
+																"habits"
+															],
+															"variable": [
+																{
+																	"key": "userId",
+																	"value": "string"
+																}
+															]
+														},
+														"description": "Get reading habits summary for a specific user by ID. Returns `UserReadingHabitsDTO`."
+													},
+													"response": [
+														{
+															"name": "OK",
+															"originalRequest": {
+																"method": "GET",
+																"header": [
+																	{
+																		"key": "Accept",
+																		"value": "text/plain"
+																	},
+																	{
+																		"key": "Authorization",
+																		"value": "Bearer <token>",
+																		"description": "Added as a part of security scheme: bearer"
+																	}
+																],
+																"url": {
+																	"raw": "{{baseUrl}}/api/Insights/user/:userId/habits",
+																	"host": [
+																		"{{baseUrl}}"
+																	],
+																	"path": [
+																		"api",
+																		"Insights",
+																		"user",
+																		":userId",
+																		"habits"
+																	],
+																	"variable": [
+																		{
+																			"key": "userId",
+																			"value": "string"
+																		}
+																	]
+																}
+															},
+															"status": "OK",
+															"code": 200,
+															"_postman_previewlanguage": "json",
+															"header": [
+																{
+																	"key": "Content-Type",
+																	"value": "application/json"
+																}
+															],
+															"cookie": [],
+															"body": "{\n  \"userId\": \"string\",\n  \"userName\": \"string\",\n  \"summary\": \"string\",\n  \"preferredGenres\": [\n    \"string\",\n    \"string\"\n  ],\n  \"totalBooks\": 7167,\n  \"completedBooks\": 651,\n  \"booksInProgress\": 369,\n  \"readingPattern\": \"string\",\n  \"characteristics\": [\n    \"string\",\n    \"string\"\n  ]\n}"
+														}
+													]
+												}
+											]
+										}
+									]
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Recommendation",
+					"item": [
+						{
+							"name": "save",
+							"item": [
+								{
+									"name": "/api/Recommendation/save",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"title\": \"string\",\n  \"author\": \"string\",\n  \"genre\": \"string\",\n  \"estimatedPrice\": 1276.2472271297697\n}",
+											"options": {
+												"raw": {
+													"headerFamily": "json",
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/api/Recommendation/save",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"Recommendation",
+												"save"
+											]
+										},
+										"description": "Save a recommended book to the user's collection. Accepts `SaveRecommendationRequestDTO` in body."
+									},
+									"response": [
+										{
+											"name": "OK",
+											"originalRequest": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/json"
+													},
+													{
+														"key": "Authorization",
+														"value": "Bearer <token>",
+														"description": "Added as a part of security scheme: bearer"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n  \"title\": \"string\",\n  \"author\": \"string\",\n  \"genre\": \"string\",\n  \"estimatedPrice\": 1276.2472271297697\n}",
+													"options": {
+														"raw": {
+															"headerFamily": "json",
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{baseUrl}}/api/Recommendation/save",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"Recommendation",
+														"save"
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "text",
+											"header": [],
+											"cookie": [],
+											"body": ""
+										}
+									]
+								}
+							]
+						},
+						{
+							"name": "dismiss",
+							"item": [
+								{
+									"name": "/api/Recommendation/dismiss",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"title\": \"string\",\n  \"author\": \"string\"\n}",
+											"options": {
+												"raw": {
+													"headerFamily": "json",
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/api/Recommendation/dismiss",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"Recommendation",
+												"dismiss"
+											]
+										},
+										"description": "Dismiss a recommended book, so it won’t appear in future recommendations. Accepts `DismissRecommendationDTO` in body."
+									},
+									"response": [
+										{
+											"name": "OK",
+											"originalRequest": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/json"
+													},
+													{
+														"key": "Authorization",
+														"value": "Bearer <token>",
+														"description": "Added as a part of security scheme: bearer"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n  \"title\": \"string\",\n  \"author\": \"string\"\n}",
+													"options": {
+														"raw": {
+															"headerFamily": "json",
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{baseUrl}}/api/Recommendation/dismiss",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"Recommendation",
+														"dismiss"
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "text",
+											"header": [],
+											"cookie": [],
+											"body": ""
+										}
+									]
+								}
+							]
+						},
+						{
+							"name": "/api/Recommendation",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"count\": 4383\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/Recommendation",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"Recommendation"
+									]
+								},
+								"description": "Get personalized book recommendations for the authenticated user. Accepts `RecommendationRequestDTO`"
+							},
+							"response": [
+								{
+									"name": "OK",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer <token>",
+												"description": "Added as a part of security scheme: bearer"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"count\": 4383\n}",
+											"options": {
+												"raw": {
+													"headerFamily": "json",
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/api/Recommendation",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"Recommendation"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "text",
+									"header": [],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "User",
+					"item": [
+						{
+							"name": "profile",
+							"item": [
+								{
+									"name": "/api/User/profile",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/api/User/profile",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"User",
+												"profile"
+											]
+										},
+										"description": "Get the profile of the currently logged-in user"
+									},
+									"response": [
+										{
+											"name": "OK",
+											"originalRequest": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Authorization",
+														"value": "Bearer <token>",
+														"description": "Added as a part of security scheme: bearer"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/api/User/profile",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"User",
+														"profile"
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "text",
+											"header": [],
+											"cookie": [],
+											"body": ""
+										}
+									]
+								},
+								{
+									"name": "/api/User/profile",
+									"request": {
+										"method": "PUT",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"firstName\": \"string\",\n  \"lastName\": \"string\",\n  \"phoneNumber\": \"string\",\n  \"dateOfBirth\": \"1962-05-15T05:01:22.944Z\"\n}",
+											"options": {
+												"raw": {
+													"headerFamily": "json",
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/api/User/profile",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"User",
+												"profile"
+											]
+										},
+										"description": "Update the profile of the current user"
+									},
+									"response": [
+										{
+											"name": "OK",
+											"originalRequest": {
+												"method": "PUT",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/json"
+													},
+													{
+														"key": "Authorization",
+														"value": "Bearer <token>",
+														"description": "Added as a part of security scheme: bearer"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n  \"firstName\": \"string\",\n  \"lastName\": \"string\",\n  \"phoneNumber\": \"string\",\n  \"dateOfBirth\": \"1962-05-15T05:01:22.944Z\"\n}",
+													"options": {
+														"raw": {
+															"headerFamily": "json",
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{baseUrl}}/api/User/profile",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"User",
+														"profile"
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "text",
+											"header": [],
+											"cookie": [],
+											"body": ""
+										}
+									]
+								}
+							]
+						},
+						{
+							"name": "change-password",
+							"item": [
+								{
+									"name": "/api/User/change-password",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"currentPassword\": \"string\",\n  \"newPassword\": \"string\",\n  \"confirmNewPassword\": \"string\"\n}",
+											"options": {
+												"raw": {
+													"headerFamily": "json",
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/api/User/change-password",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"User",
+												"change-password"
+											]
+										},
+										"description": "This is a **POST** request to `{{baseUrl}}/api/User/change-password` that allows users to change their password.\n\n## Key Details:\n\n- **Method**: POST\n    \n- **Authentication**: Uses Bearer Token ({{bearerToken}} variable)\n    \n- **Content-Type**: application/json"
+									},
+									"response": [
+										{
+											"name": "OK",
+											"originalRequest": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/json"
+													},
+													{
+														"key": "Authorization",
+														"value": "Bearer <token>",
+														"description": "Added as a part of security scheme: bearer"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n  \"currentPassword\": \"string\",\n  \"newPassword\": \"string\",\n  \"confirmNewPassword\": \"string\"\n}",
+													"options": {
+														"raw": {
+															"headerFamily": "json",
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{baseUrl}}/api/User/change-password",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"User",
+														"change-password"
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "text",
+											"header": [],
+											"cookie": [],
+											"body": ""
+										}
+									]
+								}
+							]
+						},
+						{
+							"name": "account",
+							"item": [
+								{
+									"name": "/api/User/account",
+									"request": {
+										"method": "DELETE",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"password\": \"string\"\n}",
+											"options": {
+												"raw": {
+													"headerFamily": "json",
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/api/User/account",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"User",
+												"account"
+											]
+										},
+										"description": "# DELETE /api/User/:userId\n\nA **DELETE** request to remove a specific user by their ID.\n\n**Details:**\n\n- **Path Variable**: `userId` (string)\n    \n- **Authentication**: Bearer Token (`{{bearerToken}}`)\n    \n- **Base URL**: `{{baseUrl}}`"
+									},
+									"response": [
+										{
+											"name": "OK",
+											"originalRequest": {
+												"method": "DELETE",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/json"
+													},
+													{
+														"key": "Authorization",
+														"value": "Bearer <token>",
+														"description": "Added as a part of security scheme: bearer"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n  \"password\": \"string\"\n}",
+													"options": {
+														"raw": {
+															"headerFamily": "json",
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{baseUrl}}/api/User/account",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"User",
+														"account"
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "text",
+											"header": [],
+											"cookie": [],
+											"body": ""
+										}
+									]
+								}
+							]
+						},
+						{
+							"name": "{userId}",
+							"item": [
+								{
+									"name": "role",
+									"item": [
+										{
+											"name": "/api/User/:userId/role",
+											"request": {
+												"method": "PUT",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/json"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n  \"role\": \"string\"\n}",
+													"options": {
+														"raw": {
+															"headerFamily": "json",
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{baseUrl}}/api/User/:userId/role",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"User",
+														":userId",
+														"role"
+													],
+													"variable": [
+														{
+															"key": "userId",
+															"value": "string"
+														}
+													]
+												},
+												"description": "A **PUT** request to update a user's role.\n\n**Details:**\n\n- **Path Variable**: `userId` (string)\n    \n- **Authentication**: Bearer Token (`{{bearerToken}}`)\n    \n- **Base URL**: `{{baseUrl}}`\n    \n- **Content-Type**: application/json\n    \n- **Request Body**: `{\"role\":\"string\"}`"
+											},
+											"response": [
+												{
+													"name": "OK",
+													"originalRequest": {
+														"method": "PUT",
+														"header": [
+															{
+																"key": "Content-Type",
+																"value": "application/json"
+															},
+															{
+																"key": "Authorization",
+																"value": "Bearer <token>",
+																"description": "Added as a part of security scheme: bearer"
+															}
+														],
+														"body": {
+															"mode": "raw",
+															"raw": "{\n  \"role\": \"string\"\n}",
+															"options": {
+																"raw": {
+																	"headerFamily": "json",
+																	"language": "json"
+																}
+															}
+														},
+														"url": {
+															"raw": "{{baseUrl}}/api/User/:userId/role",
+															"host": [
+																"{{baseUrl}}"
+															],
+															"path": [
+																"api",
+																"User",
+																":userId",
+																"role"
+															],
+															"variable": [
+																{
+																	"key": "userId",
+																	"value": "string"
+																}
+															]
+														}
+													},
+													"status": "OK",
+													"code": 200,
+													"_postman_previewlanguage": "text",
+													"header": [],
+													"cookie": [],
+													"body": ""
+												}
+											]
+										}
+									]
+								},
+								{
+									"name": "/api/User/:userId",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/api/User/:userId",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"User",
+												":userId"
+											],
+											"variable": [
+												{
+													"key": "userId",
+													"value": "string"
+												}
+											]
+										},
+										"description": "A **GET** request to retrieve a specific user by their ID.\n\n**Details:**\n\n- **Path Variable**: `userId` (string)\n    \n- **Authentication**: Bearer Token (`{{bearerToken}}`)\n    \n- **Base URL**: `{{baseUrl}}`"
+									},
+									"response": [
+										{
+											"name": "OK",
+											"originalRequest": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Authorization",
+														"value": "Bearer <token>",
+														"description": "Added as a part of security scheme: bearer"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/api/User/:userId",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"User",
+														":userId"
+													],
+													"variable": [
+														{
+															"key": "userId",
+															"value": "string"
+														}
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "text",
+											"header": [],
+											"cookie": [],
+											"body": ""
+										}
+									]
+								},
+								{
+									"name": "/api/User/:userId",
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/api/User/:userId",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"User",
+												":userId"
+											],
+											"variable": [
+												{
+													"key": "userId",
+													"value": "string"
+												}
+											]
+										},
+										"description": "A **DELETE** request to remove a user by ID. Uses Bearer Token authentication with path variable `userId` and `{{baseUrl}}` variable"
+									},
+									"response": [
+										{
+											"name": "OK",
+											"originalRequest": {
+												"method": "DELETE",
+												"header": [
+													{
+														"key": "Authorization",
+														"value": "Bearer <token>",
+														"description": "Added as a part of security scheme: bearer"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/api/User/:userId",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"User",
+														":userId"
+													],
+													"variable": [
+														{
+															"key": "userId",
+															"value": "string"
+														}
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "text",
+											"header": [],
+											"cookie": [],
+											"body": ""
+										}
+									]
+								}
+							]
+						},
+						{
+							"name": "/api/User",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/User",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"User"
+									]
+								},
+								"description": "A **GET** request to retrieve user data. Uses Bearer Token authentication with `{{baseUrl}}` and `{{bearerToken}}` variables"
+							},
+							"response": [
+								{
+									"name": "OK",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "Bearer <token>",
+												"description": "Added as a part of security scheme: bearer"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/api/User",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"User"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "text",
+									"header": [],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "health",
+			"item": [
+				{
+					"name": "/health",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/health",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"health"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "OK",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer <token>",
+										"description": "Added as a part of security scheme: bearer"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/health",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"health"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{bearerToken}}",
+				"type": "string"
+			}
+		]
+	},
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "/"
+		}
+	]
+}
